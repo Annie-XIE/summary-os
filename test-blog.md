@@ -208,7 +208,7 @@ the port’s tag with this problem at first. So next time when we meet this prob
 we can check these part first.*
 
 With this question, I checked the new launched instance’s port information, 
-With command "ovs-vsctl show" in Dom0, you can get outputs like theses:
+ran command `ovs-vsctl show` in Dom0, you can get outputs like these:
 
     Bridge "xapi5"
         fail_mode: secure
@@ -248,7 +248,4 @@ We have an session to talk to Dom0 OVS in compute node to monitor port changes, 
 
 With this in mind, I first ran this command `TODO` in Dom0 of compute node and then launch a 
 new instance to test whether OVS monitor itself works well.
-
-
-
 
