@@ -32,7 +32,7 @@ execute `sudo ip netns` in DomU, you probably get outputs like these
         qrouter-17bdbe51-93df-4bd8-93fd-bb399ed3d4c1
         qdhcp-49a623fd-c168-4f27-ad82-946bfb6df3d7
 
-Note: qdhcp-xxx is the namespace for DHCP agent
+*Note: qdhcp-xxx is the namespace for DHCP agent*
 
 ##### 2. Check interface DHCP agent uses for L3 packages
 execute `sudo ip netns exec qdhcp-49a623fd-c168-4f27-ad82-946bfb6df3d7 ifconfig`, 
@@ -77,9 +77,9 @@ you can monitor the packages.
 
 Theoretically you should see DHCP request and reply in Dom0, like you see in DHCP agent side.
 
-Note: If you cannot catch the dump package at the instance’s launching time, you can 
+*Note: If you cannot catch the dump package at the instance’s launching time, you can 
 also try this using `ifup eth0` by login the instance via XenCenter. `ifup eth0` 
-will also trigger the instance sending DHCP request.
+will also trigger the instance sending DHCP request.*
 
 ##### 1. Check DHCP request go out at VM side
 In most case, you should see the DHCP request package sent out from Dom0, this means
@@ -196,13 +196,14 @@ and then with normal process, which will let the flow through
 •	the lower priority=4 will be matched secondly and it will drop the flows
 Then, will the flows be dropped? If the flow doesn’t has dl_vlan=1, it will be dropped definitely.
 
-Note:
+*Note:*
 
-(1)	For dl_vlan=1, this is the virtual LAN tag id which corresponding to the Port tag
-(2)	I didn’t realize the problem is lacking tag for the new launched instance for 
+*(1)	For dl_vlan=1, this is the virtual LAN tag id which corresponding to the Port tag*
+
+*(2)	I didn’t realize the problem is lacking tag for the new launched instance for 
 a long time due to my lack of OVS mechanism. Thus I don’t have such sense of checking 
 the port’s tag with this problem at first. So next time when we meet this problem, 
-we can check these part first.
+we can check these part first.*
 
 With this question, I checked the new launched instance’s port information, 
 With command "ovs-vsctl show" in Dom0, you can get outputs like theses:
@@ -221,9 +222,9 @@ With command "ovs-vsctl show" in Dom0, you can get outputs like theses:
 
 For port vif16.0, it really doesn’t have tag with value 1, so the flow will be dropped without doubt.
 
-Note: When launching a new instance under xenserver, it will have a virtual network
+*Note: When launching a new instance under xenserver, it will have a virtual network
 interface named vifx.0, and from OVS’s point of view, it will also create a port 
-and bound that interface correspondingly.
+and bound that interface correspondingly.*
 
 The next step to do is to find out why the new launched instance don’t have tag in OVS.
 There is no obvious findings for new comers like me. Just read the code over and over 
