@@ -35,7 +35,7 @@ execute "sudo ip netns" in DomU, you probably get outputs like these
 Note: qdhcp-xxx is the namespace for DHCP agent
 
 ##### 2. Check interface DHCP agent uses for L3 packages
-execute "sudo ip netns exec qdhcp-49a623fd-c168-4f27-ad82-946bfb6df3d7 ifconfig", 
+execute `sudo ip netns exec qdhcp-49a623fd-c168-4f27-ad82-946bfb6df3d7 ifconfig`, 
 you can get interface like tapXXX 
 
       lo        Link encap:Local Loopback
@@ -58,7 +58,7 @@ you can get interface like tapXXX
                 RX bytes:4687150 (4.6 MB)  TX bytes:4867 (4.8 KB)
 
 ##### 3. monitor traffic flow with DHCP agent's interface tapXXX
-execute "sudo ip netns exec qdhcp-49a623fd-c168-4f27-ad82-946bfb6df3d7 tcpdump -i tap7b39ecad-81 -s0 -w dhcp.cap" 
+execute `sudo ip netns exec qdhcp-49a623fd-c168-4f27-ad82-946bfb6df3d7 tcpdump -i tap7b39ecad-81 -s0 -w dhcp.cap` 
 to monitor traffics flow with this interface
 
 Theoretically, when launching a new instance, you should see DHCP request and
@@ -71,14 +71,14 @@ This should be done in compute node, and with xenserver this is actually in dom0
 
 When new instance is launched, there will be a new virtual interface created named “vifX.0”. 
 For example, if the latest interface is vif20.0, the next one will mostly be vif21.0.
-Then you can try “tcpdump -i vif21.0”. It may fail at first because the virtual interface
+Then you can try `tcpdump -i vif21.0`. It may fail at first because the virtual interface
 is not created ready yet! But trying several times, once the virtual interface is created, 
 you can monitor the packages. 
 
 Theoretically you should see DHCP request and reply in dom0, like you see in DHCP agent side.
 
 Note: If you cannot catch the dump package at the instance’s launching time, you can 
-also try this using “ifup eth0” by login the instance via XenCenter. “ifup eth0” 
+also try this using `ifup eth0` by login the instance via XenCenter. `ifup eth0` 
 will also trigger the instance sending DHCP request.
 
 ##### 1. Check DHCP request go out at VM side
@@ -112,7 +112,7 @@ to find out which rule let the packages dropped.
 #### Check OVS flow rules
 
 ##### OVS flow rules in Network Node
-execute "sudo ovs-ofctl show br-int" to get the port information on bridge br-int
+execute `sudo ovs-ofctl show br-int` to get the port information on bridge br-int
 
       stack@DevStackOSDomU:~$ sudo ovs-ofctl show br-int
       OFPT_FEATURES_REPLY (xid=0x2): dpid:0000ba78580d604a
@@ -141,7 +141,7 @@ execute "sudo ovs-ofctl show br-int" to get the port information on bridge br-in
           speed: 0 Mbps now, 0 Mbps max
       OFPT_GET_CONFIG_REPLY (xid=0x4): frags=normal miss_send_len=0
 
-execute "sudo ovs-ofctl dump-flows br-int" to get the flow rules
+execute `sudo ovs-ofctl dump-flows br-int` to get the flow rules
 
       stack@DevStackOSDomU:~$ sudo ovs-ofctl dump-flows br-int
       NXST_FLOW reply (xid=0x4):
@@ -161,7 +161,7 @@ So, maybe some rules filtered the packages at layer 2 level by OVS. I do suspect
 xapiY although I cannot say direct reasons. So checked rules in xapiY, in our 
 case it is xapi3 actually.
 
-execute "ovs-ofctl show xapi3" get port information
+execute `ovs-ofctl show xapi3` get port information
 
       [root@rbobo ~]# ovs-ofctl show xapi3
       OFPT_FEATURES_REPLY (xid=0x2): dpid:00008ec00170b013
@@ -182,7 +182,7 @@ execute "ovs-ofctl show xapi3" get port information
           speed: 0 Mbps now, 0 Mbps max
       OFPT_GET_CONFIG_REPLY (xid=0x4): frags=normal miss_send_len=0
 
-execute "ovs-ofctl dump-flows xapi3" to get flow rules
+execute `ovs-ofctl dump-flows xapi3` to get flow rules
 
       [root@rbobo ~]# ovs-ofctl dump-flows xapi3
       NXST_FLOW reply (xid=0x4):
@@ -190,7 +190,7 @@ execute "ovs-ofctl dump-flows xapi3" to get flow rules
         cookie=0x0, duration=276117.558s, table=0, n_packets=31, n_bytes=3976, idle_age=16859, hard_age=65534, priority=4,in_port=2,dl_vlan=1 actions=mod_vlan_vid:1041,NORMAL
         cookie=0x0, duration=278694.945s, table=0, n_packets=7, n_bytes=799, idle_age=65534, hard_age=65534, priority=2,in_port=2 actions=drop
 
-Please pay attention to port 2(phy-xapi3), it has two specific rules:
+Please pay attention to port `2(phy-xapi3)`, it has two specific rules:
 •	the higher priority=4 will be matched first, if the dl_vlan=1 then will modify the tag 
 and then with normal process, which will let the flow through
 •	the lower priority=4 will be matched secondly and it will drop the flows
