@@ -5,14 +5,12 @@ and more changes made in neutron. I began getting XenServer+Neutron back
 to work with previous blog
 [openstack-networking-quantum-on-xenserver](http://blogs.citrix.com/2013/06/14/openstack-networking-quantum-on-xenserver-from-notworking-to-networking/)
 
-
-    Deployment environment:
-      XenServer: 6.5
-      OpenStack: latest master code
-      Network: ML2 plugin, OVS driver, VLAN type
-      All-in-One
-  
-
+        Deployment environment:
+            XenServer: 6.5
+            OpenStack: latest master code
+            Network: ML2 plugin, OVS driver, VLAN type
+            Single Box installation
+ 
 I had made some changes in DevStack script to let XenServer+Neutron be
 installed and ran properly.
 Below are some debugging processes I made when new launched VMs cannot get IP
@@ -23,11 +21,13 @@ When VMs are booting, they will try to send DHCP request broadcast message
 within the same domain and waiting for DHCP server's reply. 
 
 If VMs cannot get IP address, our straightforward reaction is to check whether 
-the packages from the VMs can be recieved by DHCP server, see [this picture](https://github.com/Annie-XIE/summary-os/blob/master/flow-VM-to-DomU.png)
+the packages from the VMs can be recieved by DHCP server, see this picture 
+[traffic flow](https://github.com/Annie-XIE/summary-os/blob/master/flow-VM-to-DomU.png)
 
-#### Dump traffic in Network Node(DomU in my case)
+#### Dump traffic in Network Node
+Since I use DevStack with single box installation, all nodes reside in the same DomU.
 ##### 1. Check namespace that DHCP agent uses
-execute "sudo ip netns" in DomU, you probably get outputs like these
+execute `sudo ip netns` in DomU, you probably get outputs like these
 
         qrouter-17bdbe51-93df-4bd8-93fd-bb399ed3d4c1
         qdhcp-49a623fd-c168-4f27-ad82-946bfb6df3d7
@@ -64,10 +64,10 @@ to monitor traffics flow with this interface
 Theoretically, when launching a new instance, you should see DHCP request and
 reply messages like this:
 
-#### Dump traffic in Compute Node (Dom0)
+#### Dump traffic in Compute Node
 
 Meanwhile, you will definitely want to dump traffics at the VM side. 
-This should be done in compute node, and with xenserver this is actually in dom0. 
+This should be done in compute node, and with xenserver this is actually in Dom0. 
 
 When new instance is launched, there will be a new virtual interface created named “vifX.0”. 
 For example, if the latest interface is vif20.0, the next one will mostly be vif21.0.
@@ -75,14 +75,14 @@ Then you can try `tcpdump -i vif21.0`. It may fail at first because the virtual 
 is not created ready yet! But trying several times, once the virtual interface is created, 
 you can monitor the packages. 
 
-Theoretically you should see DHCP request and reply in dom0, like you see in DHCP agent side.
+Theoretically you should see DHCP request and reply in Dom0, like you see in DHCP agent side.
 
 Note: If you cannot catch the dump package at the instance’s launching time, you can 
 also try this using `ifup eth0` by login the instance via XenCenter. `ifup eth0` 
 will also trigger the instance sending DHCP request.
 
 ##### 1. Check DHCP request go out at VM side
-In most case, you should see the DHCP request package sent out from dom0, this means
+In most case, you should see the DHCP request package sent out from Dom0, this means
 that the VM itself is OK. It has sent out DHCP request message. 
 
 Note: Some images will try to send DHCP request from time to time until it get the respond
@@ -106,7 +106,7 @@ For L2, since we use  OVS, I begin to check OVS rules. It will take you much tim
 if you are not familiar with OVS. At least I spent much time on it for totally 
 understanding the mechanism and the rules.
 
-The main aim is to check that all existing rules in dom0 and domU, and then try 
+The main aim is to check that all existing rules in Dom0 and DomU, and then try 
 to find out which rule let the packages dropped.
 
 #### Check OVS flow rules
@@ -151,10 +151,10 @@ execute `sudo ovs-ofctl dump-flows br-int` to get the flow rules
         cookie=0x9bf3d60450c2ae94, duration=277632.103s, table=23, n_packets=0, n_bytes=0, idle_age=65534, hard_age=65534, priority=0 actions=drop
         cookie=0x9bf3d60450c2ae94, duration=277632.09s, table=24, n_packets=0, n_bytes=0, idle_age=65534, hard_age=65534, priority=0 actions=drop
 
-These rules in domU looks like normal without suspicious, so go on with dom0, try find more.
+These rules in DomU looks like normal without suspicious, so go on with Dom0, try find more.
 
 ##### OVS flow rules in Compute Node
-As analysis with "Picture 1"[https://github.com/Annie-XIE/summary-os/blob/master/flow-VM-to-DomU.png], 
+As analysis with this picture [traffic flow](https://github.com/Annie-XIE/summary-os/blob/master/flow-VM-to-DomU.png), 
 the traffic direction from VM to DHCP is xapiX->xapiY(Dom0), then ->br-eth1->br-int(DomU). 
 
 So, maybe some rules filtered the packages at layer 2 level by OVS. I do suspect 
