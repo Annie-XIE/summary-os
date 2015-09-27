@@ -193,6 +193,7 @@ execute `ovs-ofctl dump-flows xapi3` to get flow rules
 Please pay attention to port `2(phy-xapi3)`, it has two specific rules:
 •	the higher priority=4 will be matched first, if the dl_vlan=1 then will modify the tag 
 and then with normal process, which will let the flow through
+
 •	the lower priority=4 will be matched secondly and it will drop the flows
 Then, will the flows be dropped? If the flow doesn’t has dl_vlan=1, it will be dropped definitely.
 
@@ -226,7 +227,27 @@ For port vif16.0, it really doesn’t have tag with value 1, so the flow will be
 interface named vifx.0, and from OVS’s point of view, it will also create a port 
 and bound that interface correspondingly.*
 
+#### Check why tag is not set
 The next step to do is to find out why the new launched instance don’t have tag in OVS.
 There is no obvious findings for new comers like me. Just read the code over and over 
 again and make assumptions and test and so forth.
+
+But after trying this and that a while, I do found each time when I resart neutron-openvswitch-agent
+in Compute Node, the VM can get IP with `ifup etho` command.
+
+So, there must be something that are done when neutron-openvswitch-agent restart,
+but are not done when launching a new instance. With this findings, it's much more targeted
+when reading codes.
+
+Finally I found that, with XenServer, when new instance is launched, neutron-openvswitch-agent in 
+compute node cannot detect there is new port added and so it will not add tag to this port.
+
+But why neutron-openvswith-agent in compute node cannot detect port changes?
+We have an session to talk to Dom0 OVS in compute node to monitor port changes, why it doesn't work?
+
+With this in mind, I first ran this command `TODO` in Dom0 of compute node and then launch a 
+new instance to test whether OVS monitor itself works well.
+
+
+
 
