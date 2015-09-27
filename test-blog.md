@@ -57,7 +57,7 @@ you can get interface like tapXXX
                 collisions:0 txqueuelen:0
                 RX bytes:4687150 (4.6 MB)  TX bytes:4867 (4.8 KB)
 
-##### 3. monitor traffic flow with DHCP agent's interface tapXXX
+##### 3. Monitor traffic flow with DHCP agent's interface tapXXX
 execute `sudo ip netns exec qdhcp-49a623fd-c168-4f27-ad82-946bfb6df3d7 tcpdump -i tap7b39ecad-81 -s0 -w dhcp.cap` 
 to monitor traffics flow with this interface
 
@@ -111,7 +111,7 @@ to find out which rule let the packages dropped.
 
 #### Check OVS flow rules
 
-##### OVS flow rules in Network Node
+##### 1. OVS flow rules in Network Node
 execute `sudo ovs-ofctl show br-int` to get the port information on bridge br-int
 
       stack@DevStackOSDomU:~$ sudo ovs-ofctl show br-int
@@ -153,7 +153,7 @@ execute `sudo ovs-ofctl dump-flows br-int` to get the flow rules
 
 These rules in DomU looks like normal without suspicious, so go on with Dom0, try find more.
 
-##### OVS flow rules in Compute Node
+##### 2. OVS flow rules in Compute Node
 As analysis with this picture [traffic flow](https://github.com/Annie-XIE/summary-os/blob/master/flow-VM-to-DomU.png), 
 the traffic direction from VM to DHCP is xapiX->xapiY(Dom0), then ->br-eth1->br-int(DomU). 
 
@@ -191,17 +191,18 @@ execute `ovs-ofctl dump-flows xapi3` to get flow rules
         cookie=0x0, duration=278694.945s, table=0, n_packets=7, n_bytes=799, idle_age=65534, hard_age=65534, priority=2,in_port=2 actions=drop
 
 Please pay attention to port `2(phy-xapi3)`, it has two specific rules:
-•	the higher priority=4 will be matched first, if the dl_vlan=1 then will modify the tag 
+
+• The higher priority=4 will be matched firstly, if the dl_vlan=1, it will modify the tag 
 and then with normal process, which will let the flow through
 
-•	the lower priority=4 will be matched secondly and it will drop the flows
-Then, will the flows be dropped? If the flow doesn’t has dl_vlan=1, it will be dropped definitely.
+• The lower priority=2 will be matched secondly, it will drop the flow.
+So, will the flows be dropped? If the flow doesn’t have dl_vlan=1, it will be dropped definitely.
 
 *Note:*
 
-*(1)	For dl_vlan=1, this is the virtual LAN tag id which corresponding to the Port tag*
+*(1) For dl_vlan=1, this is the virtual LAN tag id which corresponding to the Port tag*
 
-*(2)	I didn’t realize the problem is lacking tag for the new launched instance for 
+*(2) I didn’t realize the problem is lacking tag for the new launched instance for 
 a long time due to my lack of OVS mechanism. Thus I don’t have such sense of checking 
 the port’s tag with this problem at first. So next time when we meet this problem, 
 we can check these part first.*
