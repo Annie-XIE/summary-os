@@ -151,7 +151,7 @@ execute `sudo ovs-ofctl dump-flows br-int` to get the flow rules
         cookie=0x9bf3d60450c2ae94, duration=277632.103s, table=23, n_packets=0, n_bytes=0, idle_age=65534, hard_age=65534, priority=0 actions=drop
         cookie=0x9bf3d60450c2ae94, duration=277632.09s, table=24, n_packets=0, n_bytes=0, idle_age=65534, hard_age=65534, priority=0 actions=drop
 
-These rules in DomU looks like normal without suspicious, so go on with Dom0, try find more.
+These rules in DomU looks like normal without suspicious, so go on with Dom0 and try to find more.
 
 ##### 2. OVS flow rules in Compute Node
 As analysis with this picture [traffic flow](https://github.com/Annie-XIE/summary-os/blob/master/flow-VM-to-DomU.png), 
@@ -229,23 +229,62 @@ interface named vifx.0, and from OVS’s point of view, it will also create a po
 and bound that interface correspondingly.*
 
 #### Check why tag is not set
-The next step to do is to find out why the new launched instance don’t have tag in OVS.
+The next step is to find out why the new launched instance don’t have tag in OVS.
 There is no obvious findings for new comers like me. Just read the code over and over 
-again and make assumptions and test and so forth.
+and make assumptions and test and so forth.
 
-But after trying this and that a while, I do found each time when I resart neutron-openvswitch-agent
-in Compute Node, the VM can get IP with `ifup etho` command.
+But after trying this and that a while, I did find each time when I resart 
+neutron-openvswitch-agent(*q-agt*) in Compute Node, the VM can get IP if I execute `ifup etho` command.
 
-So, there must be something that are done when neutron-openvswitch-agent restart,
-but are not done when launching a new instance. With this findings, it's much more targeted
-when reading codes.
+So, there must be something which is done when *q-agt* restart and
+is not done when launching a new instance. With this findings, it's much more targeted
+while reading codes.
 
-Finally I found that, with XenServer, when new instance is launched, neutron-openvswitch-agent in 
-compute node cannot detect there is new port added and so it will not add tag to this port.
+Finally I found that, with XenServer, when new instance is launched, 
+*q-agt* cannot detect new added port and it will not add tag to this port consequently.
 
-But why neutron-openvswith-agent in compute node cannot detect port changes?
-We have an session to talk to Dom0 OVS in compute node to monitor port changes, why it doesn't work?
+But why *q-agt* cannot detect port changes?
+We have a session from DomU to Dom0 to monitor port changes, seems it cannot work as we expected.
 
-With this in mind, I first ran this command `TODO` in Dom0 of compute node and then launch a 
-new instance to test whether OVS monitor itself works well.
+With this in mind, I first ran command `ovsdb-client monitor Interface name,ofport` 
+in Dom0, you probably get outputs like this:
+
+                [root@rbobo ~]# ovsdb-client monitor Interface name,ofport
+                row                                  action  name        ofport
+                ------------------------------------ ------- ----------- ------
+                54bcda61-de64-4d0e-a1c8-d339a2cabb50 initial "eth1"      1     
+                987be636-b352-47a3-a570-8118b59c7bbc initial "xapi3"     65534 
+                bb6a4f70-9f9c-4362-9397-010760f85a06 initial "xapi5"     65534 
+                9ddff368-0be5-4f23-a03c-7940543d0ccc initial "vif15.2"   1     
+                ba3af0f5-e8ed-4bdb-8c3d-67a638b81091 initial "phy-xapi3" 2     
+                b57284cf-1dcd-4a10-bee1-42516afe2573 initial "eth0"      1     
+                38a0dd37-173f-421c-9aba-3e03a5b8c900 initial "vif16.0"   2     
+                58b83fe4-5f33-40f3-9dd9-d5d4b3f25981 initial "xenbr0"    65534 
+                6c792964-3930-477c-bafa-5415259dea96 initial "int-xapi3" 1     
+                caa52d63-59ed-4917-9ec3-1ea957470d5e initial "vif15.1"   1     
+                d8805d05-bbd2-40cb-b219-eb9177c217dc initial "vif15.0"   6     
+                8131dcd2-69ea-401a-a65e-4d4a17203e0c initial "xapi4"     65534 
+                086e6e3a-1ab2-469f-9604-56bbd4c2fe86 initial "xenbr1"    65534 
+
+Then I launched a new instance try to find whether OVS monitor can give new output
+for the new launched instance, and I do get outputs like:
+
+                row                                  action name      ofport
+                ------------------------------------ ------ --------- ------
+                249c424a-4c9a-47b4-991a-bded9ec63ada insert "vif17.0" []    
+                
+                row                                  action name      ofport
+                ------------------------------------ ------ --------- ------
+                249c424a-4c9a-47b4-991a-bded9ec63ada old              []    
+                                     new    "vif17.0" 3    
+
+So, this means the OVS monitor itself works well! There maybe other errors with the
+code that makes the monitoring. Seems it much more nearer with the root cause:)
+
+Finally, I found with XenServer, our current implementation cannot get the OVS monitor's
+output, and thus *q-agt* cannot know there is new port added. But lucky enough, 
+L2 Agent provide another way of getting the ports changes, and thus we can first use 
+that way instead.
+
+##### To be continued for VXLAN/GRE ...
 
