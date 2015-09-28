@@ -62,7 +62,7 @@ execute `sudo ip netns exec qdhcp-49a623fd-c168-4f27-ad82-946bfb6df3d7 tcpdump -
 to monitor traffics flow with this interface
 
 Theoretically, when launching a new instance, you should see DHCP request and
-reply messages like this:
+reply messages like [traffic dump](https://github.com/Annie-XIE/summary-os/blob/master/dhcp-dump.png)
 
 #### Dump traffic in Compute Node
 
