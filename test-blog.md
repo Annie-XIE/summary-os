@@ -62,7 +62,11 @@ execute `sudo ip netns exec qdhcp-49a623fd-c168-4f27-ad82-946bfb6df3d7 tcpdump -
 to monitor traffics flow with this interface
 
 Theoretically, when launching a new instance, you should see DHCP request and
-reply messages like [traffic dump](https://github.com/Annie-XIE/summary-os/blob/master/dhcp-dump.png)
+reply messages like:
+
+
+                16:29:40.710953 IP 0.0.0.0.bootpc > 255.255.255.255.bootps: BOOTP/DHCP, Request from fa:16:3e:f9:f6:b0 (oui Unknown), length 302
+                16:29:40.713625 IP 172.20.0.1.bootps > 172.20.0.10.bootpc: BOOTP/DHCP, Reply, length 330
 
 #### Dump traffic in Compute Node
 
@@ -282,15 +286,10 @@ So, this means the OVS monitor itself works well! There maybe other errors with 
 code that makes the monitoring. Seems it much more nearer with the root cause:)
 
 Finally, I found with XenServer, our current implementation cannot get the OVS monitor's
-output, and thus *q-agt* cannot know there is new port added. But lucky enough, 
-L2 Agent provide another way of getting the ports changes, and thus we can first use 
-that way instead.
-
-Finally, I found with XenServer, our current implementation cannot get the OVS monitor's
 output, and thus q-agt cannot know there is new port added. But lucky enough, L2 Agent provide
 another way of getting the ports changes, and thus we can first use that way instead.
 
-Setting minimize_polling=false in the L2 agent's configuration file ensures the Agent does not
+Setting *minimize_polling=false* in the L2 agent's configuration file ensures the Agent does not
 rely on "ovsdb-client monitor", which means that the port will be identified and the tag gets added!
 
 In this case, this is all that was needed to get an IP address and everything else worked normally.
