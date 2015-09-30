@@ -286,5 +286,12 @@ output, and thus *q-agt* cannot know there is new port added. But lucky enough,
 L2 Agent provide another way of getting the ports changes, and thus we can first use 
 that way instead.
 
-##### To be continued for VXLAN/GRE ...
+Finally, I found with XenServer, our current implementation cannot get the OVS monitor's
+output, and thus q-agt cannot know there is new port added. But lucky enough, L2 Agent provide
+another way of getting the ports changes, and thus we can first use that way instead.
+
+Setting minimize_polling=false in the L2 agent's configuration file ensures the Agent does not
+rely on "ovsdb-client monitor", which means that the port will be identified and the tag gets added!
+
+In this case, this is all that was needed to get an IP address and everything else worked normally.
 
