@@ -82,18 +82,18 @@ you can monitor the packages.
 Theoretically you should see DHCP request and reply in Dom0, like you see in DHCP agent side.
 
 *Note: If you cannot catch the dump package at the instance’s launching time, you can 
-also try this using `ifup eth0` by login the instance via XenCenter. `ifup eth0` 
-will also trigger the instance sending DHCP request.*
+also try this using* `ifup eth0` *by login the instance via XenCenter. `ifup eth0` will also 
+trigger the instance sending DHCP request.*
 
 ##### 1. Check DHCP request go out at VM side
 In most case, you should see the DHCP request package sent out from Dom0, this means
 that the VM itself is OK. It has sent out DHCP request message. 
 
-Note: Some images will try to send DHCP request from time to time until it get the respond
+*Note: Some images will try to send DHCP request from time to time until it get the respond
 message. However, some images won’t. They will only try several times, e.g. three time. 
 Even if it cannot get DHCP responds it won’t try again any more. In some scenario, 
 this will let the instance lost the chance of sending DHCP request. And that’s why 
-some people on the internet suggest changing images when launching instance cannot get IP. 
+some people on the internet suggest changing images when launching instance cannot get IP.* 
 
 ##### 2. Check DHCP request go in at DHCP server side
 But in my case, I cannot see any DHCP request from the DHCP agent side
