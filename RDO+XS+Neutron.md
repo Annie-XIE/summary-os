@@ -71,10 +71,10 @@ compute VM to access it’s own hypervisor on the static address 169.254.0.1
     dev_path=$(grep -l $mac /sys/class/net/*/address)
     dev=$(basename $(dirname $dev_path))
     cat << EOF > /etc/sysconfig/network-scripts/ifcfg-$dev
-    DEVICE="$dev"
-    BOOTPROTO="dhcp"
-    ONBOOT="yes"
-    TYPE="Ethernet"
+        DEVICE="$dev"
+        BOOTPROTO="dhcp"
+        ONBOOT="yes"
+        TYPE="Ethernet"
     EOF
     ifup $dev
 
@@ -106,3 +106,61 @@ Download direct from git.openstack.org since they are not packaged
 4.7 Change netwrap to check exit code 0 not stderr 
 (to allow iptables-restore to include deprecated ‘state’ matches)
 
+##### 5. Configure Nova
+5.1 Modify /etc/nova/nova.conf to switch to using XenServer
+
+    [DEFAULT]
+    compute_driver=xenapi.XenAPIDriver
+    firewall_driver=nova.virt.firewall.NoopFirewallDriver
+    [xenserver]
+    connection_url=https://169.254.0.1
+    connection_username=root
+    connection_password=<password>
+    vif_driver=nova.virt.xenapi.vif.XenAPIOpenVswitchDriver
+    ovs_int_bridge=xapi7 # Bridge for ovs-xen-int
+
+5.2 Install XenAPI Python XML RPC lightweight bindings
+
+    yum install -y python-pip
+    pip install xenapi
+    
+    or
+    
+    curl https://raw.githubusercontent.com/xapi-project/xen-api/master/scripts/examples/python/XenAPI.py -o /usr/lib/python2.7/site-packages/XenAPI.py
+
+##### 6. Configure Neutron
+6.1 Add confguration itmes in */etc/neutron/rootwrap.conf* to support
+using XenServer remotely.
+
+    [xenapi]
+    # XenAPI configuration is only required by the L2 agent if it is to
+    # target a XenServer/XCP compute host's dom0.
+    xenapi_connection_url=http://169.254.0.1
+    xenapi_connection_username=root
+    xenapi_connection_password=<password>
+
+6.2 Modify */etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini* 
+
+    [ovs]
+    integration_bridge = br-int
+    bridge_mappings = physnet1:br-eth1
+
+6.3 Create another OVS configure file for Dom0
+
+    cp /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini.dom0
+    
+    [ovs]
+    integration_bridge = xapi3
+    bridge_mappings = physnet1:xapi2
+    
+    [agent]
+    root_helper = neutron-rootwrap-xen-dom0 /etc/neutron/rootwrap.conf
+    root_helper_daemon =
+    minimize_polling = False
+    
+    [securitygroup]
+    firewall_driver = neutron.agent.firewall.NoopFirewallDriver
+    
+*Note: For all-in-one installation, typically there is only one neutron-openvswitch-agent.
+However, XenServer has Dom0 and DomU, so we should manually start the other ovs agent 
+to let it talk to Dom0*
