@@ -1,15 +1,27 @@
 ### Manual of XenServer+RDO+Neutron
 
-This manual gives you the instructions on installing OpenStack with 
+This manual gives brief instruction on installing OpenStack with 
 Neutron using RDO under RHEL7/CentOS7.
 
+		Environment:
+			XenServer 6.5
+			CentOS 7.0
+			OpenStack kilo
+			Neutron ML2 plugin/OVS/VLAN
+
 ##### 1. Install XenServer 6.5
-1.1. Ensure that the default SR is EXT3 (in the installer this is called 
+1.1. Make sure the default SR is EXT3 (in the installer this is called 
 XenDesktop optimised storage)
 
+1.2 Create network for OpenStack. After installing XenServer. In our single
+box environment, we need to create three networks, *Private network*, 
+*Public network*, *VM network*.
+
 ##### 2. Install Guest VM
-2.1.	One VM per hypervisor using XenServer 6.5 and the RHEL7/CentOS7 
-templates, which will ensure that they are HVM guests.
+This Guest VM is used as platform for installing OpenStack software.
+
+2.1. One VM per hypervisor using XenServer 6.5 and RHEL7/CentOS7 templates, 
+also ensure that they are HVM guests.
 
 ##### 3. Install RDO
 3.1 [RDO Quickstart](https://www.rdoproject.org/Quickstart) gives detailed 
