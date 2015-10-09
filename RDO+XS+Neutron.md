@@ -179,6 +179,6 @@ start the other ovs agent to let it talk to Dom0*
 ##### 9. Replace cirros guest with one set up to work for XenServer
     nova image-delete cirros
     wget http://ca.downloads.xensource.com/OpenStack/cirros-0.3.4-x86_64-disk.vhd.tgz
-    glance image-create --name cirros --container-format ovf --disk-format vhd --property vm_mode=xen --is-public True --file     cirros-0.3.4-x86_64-disk.vhd.tgz
+    glance image-create --name cirros --container-format ovf --disk-format vhd --property vm_mode=xen --is-public True --file cirros-0.3.4-x86_64-disk.vhd.tgz
 
 
