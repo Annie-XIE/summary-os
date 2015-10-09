@@ -145,7 +145,8 @@ using XenServer remotely.
     integration_bridge = br-int
     bridge_mappings = physnet1:br-eth1
 
-6.3 Create another OVS configure file for Dom0
+##### 7. Launch another neutron-openvswitch-agent for talking with Dom0
+7.1 Create another configuration file
 
     cp /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini.dom0
     
@@ -160,7 +161,24 @@ using XenServer remotely.
     
     [securitygroup]
     firewall_driver = neutron.agent.firewall.NoopFirewallDriver
-    
+
+7.2 Launch neutron-openvswitch-agent
+
+    /usr/bin/python2 /usr/bin/neutron-openvswitch-agent --config-file /usr/share/neutron/neutron-dist.conf --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini.dom0 --config-dir /etc/neutron/conf.d/neutron-openvswitch-agent --log-file /var/log/neutron/openvswitch-agent.log.dom0
+
 *Note: For all-in-one installation, typically there is only one neutron-openvswitch-agent.
-However, XenServer has Dom0 and DomU, so we should manually start the other ovs agent 
-to let it talk to Dom0*
+However, XenServer has seperation of Dom0 and DomU and all instances' VIFs are actually 
+managed by Dom0 and the corresponding OVS port is created in Dom0. Thus, we should manually
+start the other ovs agent to let it talk to Dom0*
+
+##### 8. Restart Nova Services
+    for svc in api cert conductor compute scheduler; do \
+	    service openstack-nova-$svc restart; \
+    done
+
+##### 9. Replace cirros guest with one set up to work for XenServer
+    nova image-delete cirros
+    wget http://ca.downloads.xensource.com/OpenStack/cirros-0.3.4-x86_64-disk.vhd.tgz
+    glance image-create --name cirros --container-format ovf --disk-format vhd --property vm_mode=xen --is-public True --file     cirros-0.3.4-x86_64-disk.vhd.tgz
+
+
