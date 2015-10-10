@@ -181,7 +181,7 @@ using XenServer remotely.
 
 6.3 Restart neutron service
 
-	`service neutron-openvswitch-agent restart`
+`service neutron-openvswitch-agent restart`
 	
 6.4 Check network config file
 
