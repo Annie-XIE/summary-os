@@ -17,28 +17,49 @@ XenDesktop optimised storage)
 box environment, we need to create three networks, *Private network*, 
 *Public network*, *VM network*.
 
+		xe network-create name-label=os-int-net
+		xe network-create name-label=os-ex-net
+		xe network-create name-label=os-vm-net
+
 ##### 2. Install Guest VM
 This Guest VM is used as platform for installing OpenStack software.
 
 2.1. One VM per hypervisor using XenServer 6.5 and RHEL7/CentOS7 templates, 
 also ensure that they are HVM guests.
 
+2.2. Create interface card for Guest VM
+
+		xe vif-create device=1 network-uuid=2147d400-89e2-4df9-e055-c772f0548f51 vm-uuid=63b519dd-e23b-3924-23a0-cc3549370b82
+		xe vif-create device=2 network-uuid=ecf39f2b-e467-17a7-b411-14c708745aad vm-uuid=63b519dd-e23b-3924-23a0-cc3549370b82
+
+*Note: vm-uuid is the id of guest vm, network-uuid is the id of os-vm-network and 
+os-ex-network, device id shoudl be set according to your environment*
+
 ##### 3. Install RDO
 3.1 [RDO Quickstart](https://www.rdoproject.org/Quickstart) gives detailed 
 installation guide. 
 
-3.2 Run `Step 1: Software repositories` and then remove 
-the postfix of *xxx.repo.orig* in */etc/yum.repos.d* which is CentOS 
-repositories that are modified by RDO during installation.
+3.2 Run `Step 0: Prerequisites` to prepare the environment
 
-3.3 Run `Step 2: Install Packstack Installer` to install packstack. Packstack
+3.3 Run `Step 1: Software repositories`. Please remove the postfix *.orig* 
+of *CentOS-XXX.repo.orig* in folder */etc/yum.repos.d* and then try `yum update -y`.
+
+*Note: You may meet some errors while executing yum update, you can just ignore these 
+errors and reboot the VM after yum update.*
+
+3.4 Run `Step 2: Install Packstack Installer` to install packstack. Packstack
 is the real one that installs OpenStack service.
 
-3.4 Generate answer file `packstack --gen-answer-file=<ANSWER_FILE>`.
+*Note: You may also meet errors of package version, you can try to install required 
+packages manually*
 
-3.5 Change *ANSWER_FILE* to set neutron related configurations.
+3.5 Generate answer file `packstack --gen-answer-file=<ANSWER_FILE>`.
+
+3.6 Change *ANSWER_FILE* to set neutron related configurations.
 You should set these configuration items according to your environment.
 
+    CONFIG_DEFAULT_PASSWORD=<your-password>
+    CONFIG_DEBUG_MODE=y
     CONFIG_NEUTRON_INSTALL=y
     CONFIG_NEUTRON_L3_EXT_BRIDGE=br-ex
     CONFIG_NEUTRON_ML2_TYPE_DRIVERS=vlan
@@ -49,19 +70,14 @@ You should set these configuration items according to your environment.
     CONFIG_NEUTRON_OVS_BRIDGE_MAPPINGS=physnet1:br-eth1
     CONFIG_NEUTRON_OVS_BRIDGE_IFACES=br-eth1:eth1
 
-3.6 Run `Step 3: Run Packstack to install OpenStack`. You should use 
+3.7 Run `Step 3: Run Packstack to install OpenStack`. You should use 
 `packstack --answer-file=<ANSWER_FILE>` instead.
 
 *Note: After the above steps, OpenStack is installed and its services should 
 begin running at the monent. But we should do some adpation work with XenServer*
 
 ##### 4. Configure Compute VM / Hypervisor communications
-
-    net=$(xe network-list bridge=xenapi --minimal)
-    vm=$(xe vm-list name-label=<vm-name> --minimal)
-    xe vif-create vm-uuid=$vm network-uuid=$net device=9
-
-4.1 Ensure XenServer network ovs-xen-int has an interface attached to the compute VMs
+4.1 Ensure XenServer network os-int-net has an interface attached to the compute VMs
 
 4.2 Use HIMN tool (plugin for XenCenter) to add internal management network to
 Compute VMs. This effectively performs the following operations, which could
@@ -73,10 +89,10 @@ also be performed manually in dom0 for each compute node:
     mac=$(xe vif-param-get uuid=$vif param-name=MAC)
     xe vm-param-set uuid=$vm xenstore-data:vm-data/himn_mac=$mac
 
-4.3 Install the XenServer PV tools in the Compute guest
+**TODO:check this: 4.3 Install the XenServer PV tools in the guest VM**
 
-4.4 Set up DHCP on the HIMN network for the compute VMs, allowing each 
-compute VM to access it’s own hypervisor on the static address 169.254.0.1
+**TODO:check this: 4.4 Set up DHCP on the HIMN network for the gues VM, allowing each 
+compute VM to access it’s own hypervisor on the static address 169.254.0.1**
 
     domid=$(xenstore-read domid)
     mac=$(xenstore-read /local/domain/$domid/vm-data/himn_mac)
@@ -119,7 +135,7 @@ Download direct from git.openstack.org since they are not packaged
 (to allow iptables-restore to include deprecated ‘state’ matches)
 
 ##### 5. Configure Nova
-5.1 Modify /etc/nova/nova.conf to switch to using XenServer
+5.1 Modify /etc/nova/nova.conf to switch to using XenServer, check below configuration items
 
     [DEFAULT]
     compute_driver=xenapi.XenAPIDriver
@@ -151,11 +167,15 @@ using XenServer remotely.
     xenapi_connection_username=root
     xenapi_connection_password=<password>
 
-6.2 Modify */etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini* 
+6.2 Check configurations in */etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini* 
 
     [ovs]
     integration_bridge = br-int
     bridge_mappings = physnet1:br-eth1
+
+6.3 Restart neutron service
+
+	`service neutron-openvswitch-agent restart`
 
 ##### 7. Launch another neutron-openvswitch-agent for talking with Dom0
 7.1 Create another configuration file
@@ -176,8 +196,8 @@ using XenServer remotely.
 
 7.2 Launch neutron-openvswitch-agent
 
-    /usr/bin/python2 /usr/bin/neutron-openvswitch-agent --config-file /usr/share/neutron/neutron-dist.conf --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini.dom0 --config-dir /etc/neutron/conf.d/neutron-openvswitch-agent --log-file /var/log/neutron/openvswitch-agent.log.dom0
-
+    /usr/bin/python2 /usr/bin/neutron-openvswitch-agent --config-file /usr/share/neutron/neutron-dist.conf --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini.dom0 --config-dir /etc/neutron/conf.d/neutron-openvswitch-agent --log-file /var/log/neutron/openvswitch-agent.log.dom0 &
+    
 *Note: For all-in-one installation, typically there is only one neutron-openvswitch-agent.
 However, XenServer has seperation of Dom0 and DomU and all instances' VIFs are actually 
 managed by Dom0 and the corresponding OVS port is created in Dom0. Thus, we should manually
