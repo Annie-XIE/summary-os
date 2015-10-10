@@ -184,6 +184,12 @@ using XenServer remotely.
 	
 6.4 Create network config file for br-eth1 and eth1
 
+This is corresponding to RDO's answer file
+
+*CONFIG_NEUTRON_OVS_BRIDGE_MAPPINGS=physnet1:br-eth1*
+
+*CONFIG_NEUTRON_OVS_BRIDGE_IFACES=br-eth1:eth1*
+
 		touch /etc/sysconfig/network-scripts/ifcfg-eth1
 		cat << EOF > /etc/sysconfig/network-scripts/ifcfg-eth1
 			DEVICE=eth1
