@@ -40,15 +40,15 @@ installation guide, please have a look before real work.
 
 3.3 Run `Step 1: Software repositories`. 
 
-*Note: 
+*Note:* 
 
-Please remove the postfix `.orig` of `CentOS-XXX.repo.orig` 
-in folder `/etc/yum.repos.d` first and then try `yum update -y`.
+*Please remove the postfix `.orig` of `CentOS-XXX.repo.orig` 
+in folder `/etc/yum.repos.d` first and then try `yum update -y`.*
 
-You may meet errors while executing yum update, you can ignore these 
-errors, some are not needed in our environment.
+*You may meet errors while executing yum update, you can ignore these 
+errors, some are not needed in our environment.*
 
-Reboot the VM after yum update.*
+*Reboot the VM after yum update.*
 
 3.4 Run `Step 2: Install Packstack Installer` to install packstack. 
 
@@ -136,8 +136,8 @@ Download direct from git.openstack.org since they are not packaged
     sed -i "/ALLOWED_CMDS = /a    'ipset', 'iptables-save', 'iptables-restore', 'ip6tables-save', 'ip6tables-restore'," /tmp/neutron_plugins/netwrap
     scp -p /tmp/neutron_plugins/* root@<Dom0 ip>:/etc/xapi.d/plugins/
 
-4.7 Change netwrap to check exit code 0 not stderr **???**
-(to allow iptables-restore to include deprecated ‘state’ matches)
+4.7 Change netwrap to check exit code 0 not stderr
+(to allow iptables-restore to include deprecated ‘state’ matches) **???**
 
 ##### 5. Configure Nova
 5.1 Edit /etc/nova/nova.conf, switch compute driver to XenServer. 
