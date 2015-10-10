@@ -181,6 +181,29 @@ using XenServer remotely.
 6.3 Restart neutron service
 
 	`service neutron-openvswitch-agent restart`
+	
+6.4 Create network config file for br-eth1 and eth1
+
+		touch /etc/sysconfig/network-scripts/ifcfg-eth1
+		cat << EOF > /etc/sysconfig/network-scripts/ifcfg-eth1
+			DEVICE=eth1
+			DEVICETYPE=ovs
+			ONBOOT=yes
+			TYPE=OVSPort
+			OVS_BRIDGE=br-eth1
+			EOF
+
+		touch /etc/sysconfig/network-scripts/ifcfg-br-eth1
+		cat << EOF > /etc/sysconfig/network-scripts/ifcfg-br-eth1
+			ONBOOT=yes
+			PEERDNS=no
+			NM_CONTROLLED=no
+			NOZEROCONF=yes
+			DEVICE=br-eth1
+			DEVICETYPE=ovs
+			OVSBOOTPROTO=dhcp
+			TYPE=OVSBridge
+			EOF
 
 ##### 7. Launch another neutron-openvswitch-agent for talking with Dom0
 7.1 Create another configuration file
