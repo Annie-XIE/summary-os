@@ -145,6 +145,7 @@ Download direct from git.openstack.org since they are not packaged
     [DEFAULT]
     compute_driver=xenapi.XenAPIDriver
     firewall_driver=nova.virt.firewall.NoopFirewallDriver
+    
     [xenserver]
     connection_url=http:<Dom0 ip>
     connection_username=root
@@ -168,7 +169,7 @@ using XenServer remotely.
     [xenapi]
     # XenAPI configuration is only required by the L2 agent if it is to
     # target a XenServer/XCP compute host's dom0.
-    xenapi_connection_url=http://169.254.0.1
+    xenapi_connection_url=http://<Dom0 ip>
     xenapi_connection_username=root
     xenapi_connection_password=<password>
 
@@ -182,13 +183,13 @@ using XenServer remotely.
 
 	`service neutron-openvswitch-agent restart`
 	
-6.4 Create network config file for br-eth1 and eth1
+6.4 Check network config file
 
-This is corresponding to RDO's answer file
+This is corresponding to RDO's answer file, if ifcfg-eth1 not exist, create one
 
-*CONFIG_NEUTRON_OVS_BRIDGE_MAPPINGS=physnet1:br-eth1*
+`CONFIG_NEUTRON_OVS_BRIDGE_MAPPINGS=physnet1:br-eth1`
 
-*CONFIG_NEUTRON_OVS_BRIDGE_IFACES=br-eth1:eth1*
+`CONFIG_NEUTRON_OVS_BRIDGE_IFACES=br-eth1:eth1`
 
 		touch /etc/sysconfig/network-scripts/ifcfg-eth1
 		cat << EOF > /etc/sysconfig/network-scripts/ifcfg-eth1
