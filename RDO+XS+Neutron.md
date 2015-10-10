@@ -146,11 +146,11 @@ Download direct from git.openstack.org since they are not packaged
     compute_driver=xenapi.XenAPIDriver
     firewall_driver=nova.virt.firewall.NoopFirewallDriver
     [xenserver]
-    connection_url=https://169.254.0.1
+    connection_url=http:<Dom0 ip>
     connection_username=root
     connection_password=<password>
     vif_driver=nova.virt.xenapi.vif.XenAPIOpenVswitchDriver
-    ovs_int_bridge=xapi7 # Bridge for ovs-xen-int
+    ovs_int_bridge=<integration network bridge>
 
 5.2 Install XenAPI Python XML RPC lightweight bindings
 
