@@ -25,10 +25,12 @@ Guest VM is used for installing OpenStack software.
 2.1. One VM per hypervisor using XenServer 6.5 and RHEL7/CentOS7 templates. 
 Please ensure that they are HVM guests.
 
-2.2. Create interface card for Guest VM
+2.2. Create interface card for Guest VM.
 
 		xe vif-create device=<device-id> network-uuid=<os-int-net-uuid> vm-uuid=<guest-vm-uuid>
-		xe vif-create device=<device-id> network-uuid=<os-ext-net-uuid> vm-uuid=<guest-vm-uuid>
+		xe vif-plug uuid=<vif-os-int-net>
+		xe vif-create device=<device-id> network-uuid=<os-ex-net-uuid> vm-uuid=<guest-vm-uuid>
+		xe vif-plug uuid=<vif-os-ex-net>
 
 *Note: device-id should be set according to your environment*
 
@@ -80,11 +82,11 @@ You should set these configuration items according to your environment.
 begin running at the moment. But we should do some additional work with XenServer*
 
 ##### 4. Configure GuestVM/Hypervisor communications
-4.1 Ensure XenServer network *os-int-net* has an interface attached to the Guest VMs
+4.1 Ensure XenServer network *os-int-net* has an interface attached to the Guest VMs.
 
 4.2 Use HIMN tool (plugin for XenCenter) to add internal management network to
 Guest VMs. This effectively performs the following operations, which could
-also be performed manually in dom0 for each compute node:
+also be performed manually in dom0 for each compute node.
 
     net=$(xe network-list bridge=xenapi --minimal)
     vm=$(xe vm-list name-label=<vm-name> --minimal)
@@ -96,7 +98,7 @@ also be performed manually in dom0 for each compute node:
 4.3 Install the XenServer PV tools in the guest VM.
 
 4.4 Set up DHCP on the HIMN network for the gues VM, allowing each 
-compute VM to access it’s own hypervisor on the static address 169.254.0.1.
+guest VM to access its own hypervisor on the static address 169.254.0.1.
 
     domid=$(xenstore-read domid)
     mac=$(xenstore-read /local/domain/$domid/vm-data/himn_mac)
@@ -112,7 +114,7 @@ compute VM to access it’s own hypervisor on the static address 169.254.0.1.
 
 4.5 Copy Nova plugins to XenServer host.
 
-Download direct from git.openstack.org since they are not packaged
+Download directly from git.openstack.org since they are not packaged.
 
     mkdir -p /tmp/nova_plugins
     tag=$(rpm -q openstack-nova-compute --queryformat '%{Version}')
@@ -150,7 +152,7 @@ Download direct from git.openstack.org since they are not packaged
     vif_driver=nova.virt.xenapi.vif.XenAPIOpenVswitchDriver
     ovs_int_bridge=<integration network bridge>
 
-5.2 Install XenAPI Python XML RPC lightweight bindings
+5.2 Install XenAPI Python XML RPC lightweight bindings.
 
     yum install -y python-pip
     pip install xenapi
@@ -170,17 +172,17 @@ using XenServer remotely.
     xenapi_connection_username=root
     xenapi_connection_password=<password>
 
-6.2 Check configurations in */etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini* 
+6.2 Check configurations in */etc/neutron/plugins/openvswitch/ovs_neutron_plugin.ini* .
 
     [ovs]
     integration_bridge = br-int
     bridge_mappings = physnet1:br-eth1
 
-6.3 Restart neutron service
+6.3 Restart neutron service.
 
 `service neutron-openvswitch-agent restart`
 	
-6.4 Check network config file
+6.4 Check network config file.
 
 This is corresponding to RDO's answer file, if ifcfg-eth1 not exist, create one
 
