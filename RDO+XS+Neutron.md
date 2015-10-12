@@ -99,6 +99,8 @@ also be performed manually in dom0 for each compute node:
 4.4 Set up DHCP on the HIMN network for the gues VM, allowing each 
 compute VM to access it’s own hypervisor on the static address 169.254.0.1.
 
+**Cannot find corresponding in /sys/class/net/**
+
     domid=$(xenstore-read domid)
     mac=$(xenstore-read /local/domain/$domid/vm-data/himn_mac)
     dev_path=$(grep -l $mac /sys/class/net/*/address)
