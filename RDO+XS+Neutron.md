@@ -80,7 +80,7 @@ You should set these configuration items according to your environment.
 begin running at the moment. But we should do some additional work with XenServer*
 
 ##### 4. Configure GuestVM/Hypervisor communications
-4.1 Ensure XenServer network os-int-net has an interface attached to the Guest VMs
+4.1 Ensure XenServer network *os-int-net* has an interface attached to the Guest VMs
 
 **TODO: Steps 4.2-4.4**
 
