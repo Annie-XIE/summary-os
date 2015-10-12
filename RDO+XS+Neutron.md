@@ -95,6 +95,7 @@ also be performed manually in dom0 for each compute node:
 4.3 Install the XenServer PV tools in the guest VM.
 
 **TODO: Cannot get corresponding eth in /sys/class/net/xxx ????**
+
 4.4 Set up DHCP on the HIMN network for the gues VM, allowing each 
 compute VM to access it’s own hypervisor on the static address 169.254.0.1.
 
@@ -195,18 +196,6 @@ This is corresponding to RDO's answer file, if ifcfg-eth1 not exist, create one
 			ONBOOT=yes
 			TYPE=OVSPort
 			OVS_BRIDGE=br-eth1
-			EOF
-
-		touch /etc/sysconfig/network-scripts/ifcfg-br-eth1
-		cat << EOF > /etc/sysconfig/network-scripts/ifcfg-br-eth1
-			ONBOOT=yes
-			PEERDNS=no
-			NM_CONTROLLED=no
-			NOZEROCONF=yes
-			DEVICE=br-eth1
-			DEVICETYPE=ovs
-			OVSBOOTPROTO=dhcp
-			TYPE=OVSBridge
 			EOF
 
 ##### 7. Launch another neutron-openvswitch-agent for talking with Dom0
