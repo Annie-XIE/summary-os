@@ -42,13 +42,13 @@ installation guide, please have a look before real work.
 
 *Note:* 
 
-*Please remove the postfix `.orig` of `CentOS-XXX.repo.orig` 
+*a. Please remove the postfix `.orig` of `CentOS-XXX.repo.orig` 
 in folder `/etc/yum.repos.d` and then try `yum update -y`.*
 
-*You may meet errors while executing yum update, you can ignore these 
+*b. You may meet errors while executing yum update, you can ignore these 
 errors, some are not needed in our environment.*
 
-*Reboot the VM after yum update.*
+*c. Reboot the VM after yum update.*
 
 3.4 Run `Step 2: Install Packstack Installer` to install packstack. 
 
