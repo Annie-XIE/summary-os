@@ -94,10 +94,10 @@ also be performed manually in dom0 for each compute node:
 
 4.3 Install the XenServer PV tools in the guest VM.
 
-**TODO: Cannot get corresponding eth in /sys/class/net/xxx ????**
-
 4.4 Set up DHCP on the HIMN network for the gues VM, allowing each 
 compute VM to access it’s own hypervisor on the static address 169.254.0.1.
+
+**TODO: Have problem in this step, cannot get corresponding eth in /sys/class/net/xxx ????**
 
     domid=$(xenstore-read domid)
     mac=$(xenstore-read /local/domain/$domid/vm-data/himn_mac)
