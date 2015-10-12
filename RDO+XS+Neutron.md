@@ -42,13 +42,13 @@ installation guide, please have a look before real work.
 
 *Note:* 
 
-*a. Please remove the postfix `.orig` of `CentOS-XXX.repo.orig` 
+*(a) Please remove the postfix `.orig` of `CentOS-XXX.repo.orig` 
 in folder `/etc/yum.repos.d` and then try `yum update -y`.*
 
-*b. You may meet errors while executing yum update, you can ignore these 
+*(b) You may meet errors while executing yum update, you can ignore these 
 errors, some are not needed in our environment.*
 
-*c. Reboot the VM after yum update.*
+*(c) Reboot the VM after yum update.*
 
 3.4 Run `Step 2: Install Packstack Installer` to install packstack. 
 
@@ -82,8 +82,6 @@ begin running at the moment. But we should do some additional work with XenServe
 ##### 4. Configure GuestVM/Hypervisor communications
 4.1 Ensure XenServer network *os-int-net* has an interface attached to the Guest VMs
 
-**TODO: Steps 4.2-4.4**
-
 4.2 Use HIMN tool (plugin for XenCenter) to add internal management network to
 Guest VMs. This effectively performs the following operations, which could
 also be performed manually in dom0 for each compute node:
@@ -96,10 +94,9 @@ also be performed manually in dom0 for each compute node:
 
 4.3 Install the XenServer PV tools in the guest VM.
 
+**TODO: Cannot get corresponding eth in /sys/class/net/xxx ????**
 4.4 Set up DHCP on the HIMN network for the gues VM, allowing each 
 compute VM to access it’s own hypervisor on the static address 169.254.0.1.
-
-**Cannot find corresponding in /sys/class/net/**
 
     domid=$(xenstore-read domid)
     mac=$(xenstore-read /local/domain/$domid/vm-data/himn_mac)
@@ -138,8 +135,6 @@ Download direct from git.openstack.org since they are not packaged
     sed -i "/ALLOWED_CMDS = /a    'ipset', 'iptables-save', 'iptables-restore', 'ip6tables-save', 'ip6tables-restore'," /tmp/neutron_plugins/netwrap
     scp -p /tmp/neutron_plugins/* root@<Dom0 ip>:/etc/xapi.d/plugins/
 
-4.7 Change netwrap to check exit code 0 not stderr
-(to allow iptables-restore to include deprecated ‘state’ matches) **???**
 
 ##### 5. Configure Nova
 5.1 Edit /etc/nova/nova.conf, switch compute driver to XenServer. 
