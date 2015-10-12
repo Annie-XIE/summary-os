@@ -43,7 +43,7 @@ installation guide, please have a look before real work.
 *Note:* 
 
 *Please remove the postfix `.orig` of `CentOS-XXX.repo.orig` 
-in folder `/etc/yum.repos.d` first and then try `yum update -y`.*
+in folder `/etc/yum.repos.d` and then try `yum update -y`.*
 
 *You may meet errors while executing yum update, you can ignore these 
 errors, some are not needed in our environment.*
