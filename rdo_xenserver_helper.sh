@@ -40,8 +40,8 @@ function create_himn {
 # run this function in domU
 function active_himn_interface {
 
-	local domid=$(xenstore-read domid)
-	local mac=$(xenstore-read /local/domain/$domid/vm-data/himn_mac)
+    local domid=$(xenstore-read domid)
+    local mac=$(xenstore-read /local/domain/$domid/vm-data/himn_mac)
     local dev_path=$(grep -l $mac /sys/class/net/*/address)
     local dev=$(basename $(dirname $dev_path))
     local ifcfg_file=/etc/sysconfig/network-scripts/ifcfg-$dev
