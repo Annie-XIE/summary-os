@@ -6,9 +6,9 @@ VM_NET=openstack-vm-network
 
 function create_network()
 {
-    xe network-create name-label=$INT_NET;
-    xe network-create name-label=$EXT_NET;
-    xe network-create name-label=$VM_NET;
+    xe network-create name-label=$INT_NET
+    xe network-create name-label=$EXT_NET
+    xe network-create name-label=$VM_NET
 }
 
 # input param: vm_uuid
@@ -21,9 +21,9 @@ function create_vif {
     local int_net_uuid=$(xe network-list name-label=$INT_NET --minimal)
     local ext_net_uuid=$(xe network-list name-label=$EXT_NET --minimal)
 
-    local vif_int_net=$(xe vif-create device=$vif_dev_int_net network-uuid=$int_net_uuid vm_uuid=$vm_uuid)
+    local vif_int_net=$(xe vif-create device=$vif_dev_int_net network-uuid=$int_net_uuid vm-uuid=$vm_uuid)
     xe vif-plug uuid=$vif_int_net
-    local vif_ext_net=$(xe vif-create device=$vif_dev_ext_net network-uuid=$ext_net_uuid vm_uuid=$vm_uuid)
+    local vif_ext_net=$(xe vif-create device=$vif_dev_ext_net network-uuid=$ext_net_uuid vm-uuid=$vm_uuid)
     xe vif-plug uuid=$vif_ext_net
 }
 
