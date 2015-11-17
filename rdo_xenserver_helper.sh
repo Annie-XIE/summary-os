@@ -74,7 +74,7 @@ function install_dom0_plugins {
 
     ################## neutron ##############
     mkdir -p /tmp/neutron_plugins
-    cp /usr/lib/python2.7/site-packages/neutron/plugins/openvswitch/agent/xenapi/etc/xapi.d/plugins/* /tmp/neutron_plugins
+    cp /usr/lib/python2.7/site-packages/neutron/plugins/ml2/drivers/openvswitch/agent/xenapi/etc/xapi.d/plugins/* /tmp/neutron_plugins
     chmod +x /tmp/neutron_plugins/*
     sed -i "/ALLOWED_CMDS = /a    'ipset', 'iptables-save', 'iptables-restore', 'ip6tables-save', 'ip6tables-restore'," /tmp/neutron_plugins/netwrap
     scp -p /tmp/neutron_plugins/* root@$dom0_ip:/etc/xapi.d/plugins/
