@@ -50,10 +50,13 @@ You can do this via XenCenter or run the following commands in dom0:
 This step requires the VM to be shut down, as it's modifying the
 network setup and the PV tools have not been installed in the guest.
 
-    xe vif-create device=autodetect network-uuid=$int_net_uuid vm-uuid=$vm_uuid
-    xe vif-plug uuid=$vif_uuid_vm_net
-    xe vif-create device=autodetect network-uuid=$ext_net_uuid vm-uuid=$vm_uuid
-    xe vif-plug uuid=$vif_uuid_ext_net
+    vm_uuid=$(xe vm-list name-label=CentOS_RDO minimal=true)
+    vm_net_uuid=$(xe network-list name-label=openstack-vm-network minimal=true)
+    ext_net_uuid=$(xe network-list name-label=openstack-ext-network minimal=true)
+    vm_vif_uuid=$(xe vif-create device=autodetect network-uuid=$vm_net_uuid vm-uuid=$vm_uuid)
+    ext_vif_uuid=$(xe vif-create device=autodetect network-uuid=$ext_net_uuid vm-uuid=$vm_uuid)
+    xe vif-plug uuid=$vm_vif_uuid
+    xe vif-plug uuid=$ext_vif_uuid
 
 ##### 3. Install RDO
 3.1 [RDO Quickstart](https://www.rdoproject.org/Quickstart) gives detailed 
@@ -79,13 +82,12 @@ These items <ANSWER_FILE> should be changed according to your environment:
     CONFIG_NEUTRON_OVS_BRIDGE_IFACES=<br-eth1:eth1,br-ex:eth2>
 
 `physnet1` is physical_network names usable for VLAN provider and tenant networks.
-
 `1000:1050` is ranges of VLAN tags on each physical_network available for allocation to tenant networks.
 
-`physnet1:br-eth1``br-eth1:eth1` br-eth1 is ovs bridge for `VM network`, eth1 is OpenStack VM's NIC
+`physnet1:br-eth1`,`br-eth1:eth1` br-eth1 is ovs bridge for `VM network`, eth1 is OpenStack VM's NIC
 which connected to `VM network`.
 
-`phyext:br-ex``br-ex:eth2` br-ex is ovs bridge for `External network`, neutron L3 agent use it for external traffic.
+`phyext:br-ex`,`br-ex:eth2` br-ex is ovs bridge for `External network`, neutron L3 agent use it for external traffic.
 eth2 is OpenStack VM's NIC which connected to `External network`.
 
 Use `packstack --answer-file=<ANSWER_FILE>` to install OpenStack services.
@@ -94,9 +96,7 @@ Use `packstack --answer-file=<ANSWER_FILE>` to install OpenStack services.
 
 5.1 Copy Nova and Neutron plugins to XenServer host.
 
-You can use [rdo_xenserver_helper.sh](https://github.com/Annie-XIE/summary-os/blob/master/rdo_xenserver_helper.sh)
-to do this work
-
+		source [rdo_xenserver_helper.sh](https://github.com/Annie-XIE/summary-os/blob/master/rdo_xenserver_helper.sh)
 		install_dom0_plugins <dom0_ip>
 
 5.2 Edit /etc/nova/nova.conf, switch compute driver to XenServer. 
