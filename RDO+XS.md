@@ -161,7 +161,8 @@ refer [xenserver_neutron picture](https://github.com/Annie-XIE/summary-os/blob/m
     [securitygroup]
     firewall_driver = neutron.agent.firewall.NoopFirewallDriver
 
-*Note: xapi3 is integration bridge, xapi2 is vm network bridge*
+**Note:**
+*xapi3 is integration bridge, xapi2 is vm network bridge*
 
 `xe network-list name-label=openstack-int-network params=bridge`
 
@@ -172,9 +173,11 @@ refer [xenserver_neutron picture](https://github.com/Annie-XIE/summary-os/blob/m
     /usr/bin/python2 /usr/bin/neutron-openvswitch-agent --config-file /usr/share/neutron/neutron-dist.conf --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/openvswitch_agent.ini.dom0 --config-dir /etc/neutron/conf.d/neutron-openvswitch-agent --log-file /var/log/neutron/openvswitch-agent.log.dom0 &
 
 ##### 7. Replace cirros guest with one set up to work for XenServer
-    nova image-delete cirros
-    wget http://ca.downloads.xensource.com/OpenStack/cirros-0.3.4-x86_64-disk.vhd.tgz
-    glance image-create --name cirros --container-format ovf --disk-format vhd --property vm_mode=xen --visibility public --file cirros-0.3.4-x86_64-disk.vhd.tgz
+		nova image-delete cirros
+
+		wget http://ca.downloads.xensource.com/OpenStack/cirros-0.3.4-x86_64-disk.vhd.tgz
+
+		glance image-create --name cirros --container-format ovf --disk-format vhd --property vm_mode=xen --visibility public --file cirros-0.3.4-x86_64-disk.vhd.tgz
 
 ##### 8. Launching instance and test its connectivity
 
