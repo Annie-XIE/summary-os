@@ -174,3 +174,30 @@ refer [xenserver_neutron picture](https://github.com/Annie-XIE/summary-os/blob/m
     wget http://ca.downloads.xensource.com/OpenStack/cirros-0.3.4-x86_64-disk.vhd.tgz
     glance image-create --name cirros --container-format ovf --disk-format vhd --property vm_mode=xen --visibility public --file cirros-0.3.4-x86_64-disk.vhd.tgz
 
+##### 8. Launching instance and test its connectivity
+
+		source keystonerc_demo
+		glance image-list
+		neutron net-list
+		nova boot --flavor m1.tiny --image cirros --nic net-id=$private_net_id demo-instance
+		neutron floatingip-create public
+		nova add-floating-ip demo-instance $floatingip-created
+
+After these above steps, we have succefully booted an instance with floating ip, 
+use `nova list` will output the instances
+
+		[root@localhost ~(keystone_demo)]# nova list
+		+--------------------------------------+---------------+--------+------------+-------------+-----------------	---------------+
+		| ID                                   | Name          | Status | Task State | Power State | Networks                       |
+		+--------------------------------------+---------------+--------+------------+-------------+--------------------------------+
+		| ac82fcc8-1609-4d34-a4a7-80e5985433f7 | demo-inst1    | ACTIVE | -          | Running     | private=10.0.0.3, 172.24.4.227 |
+		| f302a03f-3761-48e6-a786-45b324182545 | demo-instance | ACTIVE | -          | Running     | private=10.0.0.4, 172.24.4.228 |
+		+--------------------------------------+---------------+--------+------------+-------------+--------------------------------+
+
+Test the connectivity via floating ip, `ping 172.24.4.228` at the OpenStack VM, will properbly got outputs like:
+
+		[root@localhost ~(keystone_demo)]# ping 172.24.4.228
+		PING 172.24.4.228 (172.24.4.228) 56(84) bytes of data.
+		64 bytes from 172.24.4.228: icmp_seq=1 ttl=63 time=1.76 ms
+		64 bytes from 172.24.4.228: icmp_seq=2 ttl=63 time=0.666 ms
+		64 bytes from 172.24.4.228: icmp_seq=3 ttl=63 time=0.284 ms
