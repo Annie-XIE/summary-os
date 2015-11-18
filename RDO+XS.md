@@ -225,7 +225,7 @@ use `nova list` will output the instances
 		| f302a03f-3761-48e6-a786-45b324182545 | demo-instance | ACTIVE | -          | Running     | private=10.0.0.4, 172.24.4.228 |
 		+--------------------------------------+---------------+--------+------------+-------------+--------------------------------+
 
-Test the connectivity via floating ip, `ping 172.24.4.228` at the OpenStack VM, will properbly got outputs like:
+Test the connectivity via floating ip, `ping 172.24.4.228` at the OpenStack VM, will properbly get outputs like:
 
 		[root@localhost ~(keystone_demo)]# ping 172.24.4.228
 		PING 172.24.4.228 (172.24.4.228) 56(84) bytes of data.
