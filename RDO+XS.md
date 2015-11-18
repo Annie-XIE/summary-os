@@ -13,8 +13,12 @@ use XenServer as the hypervisor.
 			OpenStack: Liberty
 			Network: Neutron, ML2 plugin, OVS, VLAN
 
-##### 1. Install XenServer 6.5
-Make sure SR is EXT3 (in the installer this is called XenDesktop optimised storage).
+##### 1. Install XenServer
+The XenServer integration with OpenStack has some optimisations which means that 
+only EXT3 storage is supported. Make sure when installing your XenServer you 
+select Optimised for XenDesktop when prompted. Use XenCenter to check that the 
+SR type is EXT3 as fixing it after creating the VMs will require deleting the 
+VMs and starting again.
 
 ##### 2. Install OpenStack VM
 With XenServer, the Nova Compute service must run in a virtual machine 
@@ -37,7 +41,6 @@ is provided for some of the later steps in this blog rely on these specific
 name labels, so if you chose not to use them then please also update the helper script.
 
 You can do this via XenCenter or run the following commands in dom0:
-
 		xe network-create name-label=openstack-int-network
 		xe network-create name-label=openstack-ext-network
 		xe network-create name-label=openstack-vm-network
@@ -55,16 +58,14 @@ network setup and the PV tools have not been installed in the guest.
 ##### 3. Install RDO
 3.1 [RDO Quickstart](https://www.rdoproject.org/Quickstart) gives detailed 
 installation guide, please follow the instruction step by step. 
-This manual has points out the ones that must pay attation during installation.
+This manual only pointed out the steps that must pay attation during installation.
 
 3.2 `Step 3: Run Packstack to install OpenStack`. 
 
-Rather than running packstack immediately, we need to generate an answerfile 
+Rather than running packstack immediately, we need to generate an answerfile
 so we can tweak the configuration.
 
-Use `packstack --gen-answer-file=<ANSWER_FILE>` to generate this answer file.
-
-Use `packstack --answer-file=<ANSWER_FILE>` to install OpenStack services.
+Use `packstack --gen-answer-file=<ANSWER_FILE>` to generate answer file.
 
 These items in <ANSWER_FILE> should be changed as below:
 
@@ -77,13 +78,17 @@ These items <ANSWER_FILE> should be changed according to your environment:
     CONFIG_NEUTRON_OVS_BRIDGE_MAPPINGS=<physnet1:br-eth1,phyext:br-ex>
     CONFIG_NEUTRON_OVS_BRIDGE_IFACES=<br-eth1:eth1,br-ex:eth2>
 
-`physnet1` is physical network name, you can use other name instead. 
+`physnet1` is physical_network names usable for VLAN provider and tenant networks.
 
-`1000:1050` is VLAN tag ranges for tenant networks.
+`1000:1050` is ranges of VLAN tags on each physical_network available for allocation to tenant networks.
 
-`physnet1:br-eth1` br-eth1 is bridge for VM network
+`physnet1:br-eth1``br-eth1:eth1` br-eth1 is ovs bridge for `VM network`, eth1 is OpenStack VM's NIC
+which connected to `VM network`.
 
-`phyext:br-ex` br-ex is the bridge for external network
+`phyext:br-ex``br-ex:eth2` br-ex is ovs bridge for `External network`, neutron L3 agent use it for external traffic.
+eth2 is OpenStack VM's NIC which connected to `External network`.
+
+Use `packstack --answer-file=<ANSWER_FILE>` to install OpenStack services.
 
 ##### 5. Configure Nova and Neutron
 
