@@ -162,7 +162,9 @@ refer [xenserver_neutron picture](https://github.com/Annie-XIE/summary-os/blob/m
     firewall_driver = neutron.agent.firewall.NoopFirewallDriver
 
 *Note: xapi3 is integration bridge, xapi2 is vm network bridge*
+
 `xe network-list name-label=openstack-int-network params=bridge`
+
 `xe network-list name-label=openstack-vm-network params=bridge`
 
 6.2 Launch neutron-openvswitch-agent
