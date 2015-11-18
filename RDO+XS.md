@@ -96,7 +96,7 @@ Use `packstack --answer-file=<ANSWER_FILE>` to install OpenStack services.
 
 5.1 Copy Nova and Neutron plugins to XenServer host.
 
-		source [rdo_xenserver_helper.sh](https://github.com/Annie-XIE/summary-os/blob/master/rdo_xenserver_helper.sh)
+		source rdo_xenserver_helper.sh
 		install_dom0_plugins <dom0_ip>
 
 5.2 Edit /etc/nova/nova.conf, switch compute driver to XenServer. 
