@@ -189,7 +189,7 @@ After these above steps, we have succefully booted an instance with floating ip,
 use `nova list` will output the instances
 
 		[root@localhost ~(keystone_demo)]# nova list
-		+--------------------------------------+---------------+--------+------------+-------------+-----------------	---------------+
+		+--------------------------------------+---------------+--------+------------+-------------+--------------------------------+
 		| ID                                   | Name          | Status | Task State | Power State | Networks                       |
 		+--------------------------------------+---------------+--------+------------+-------------+--------------------------------+
 		| ac82fcc8-1609-4d34-a4a7-80e5985433f7 | demo-inst1    | ACTIVE | -          | Running     | private=10.0.0.3, 172.24.4.227 |
