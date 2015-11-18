@@ -141,11 +141,7 @@ Edit */etc/neutron/rootwrap.conf* to support uing XenServer remotely.
     service neutron-openvswitch-agent restar
 
 ##### 6. Launch another neutron-openvswitch-agent for talking with Dom0
-
-For all-in-one installation, typically there should be only one neutron-openvswitch-agent.
-Please refer [Deployment Model](https://github.com/Annie-XIE/summary-os/blob/master/deployment-neutron-1.png)
-
-However, XenServer has a seperation of Dom0 and DomU and all instances' VIFs are actually 
+XenServer has a seperation of Dom0 and DomU and all instances' VIFs are actually 
 managed by Dom0. Their corresponding OVS ports are created in Dom0. Thus, we should manually
 start the other ovs agent which is in charge of these ports and is talking to Dom0, 
 refer [xenserver_neutron picture](https://github.com/Annie-XIE/summary-os/blob/master/xs-neutron-deployment.png).
@@ -167,7 +163,7 @@ refer [xenserver_neutron picture](https://github.com/Annie-XIE/summary-os/blob/m
     firewall_driver = neutron.agent.firewall.NoopFirewallDriver
 
 **Note:**
-*xapi3 is integration bridge, xapi2 is vm network bridge*
+*xapi3 the integration bridge is xapX in the graph. xapi2 is vm network bridge, it's xapiY in the graph.*
 
 `xe network-list name-label=openstack-int-network params=bridge`
 
