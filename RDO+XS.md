@@ -179,11 +179,40 @@ refer [xenserver_neutron picture](https://github.com/Annie-XIE/summary-os/blob/m
 ##### 8. Launching instance and test its connectivity
 
 		source keystonerc_demo
-		glance image-list
-		neutron net-list
-		nova boot --flavor m1.tiny --image cirros --nic net-id=$private_net_id demo-instance
-		neutron floatingip-create public
-		nova add-floating-ip demo-instance $floatingip-created
+
+		[root@localhost ~(keystone_demo)]# glance image-list
+		+--------------------------------------+--------+
+		| ID                                   | Name   |
+		+--------------------------------------+--------+
+		| 5c227c8e-3cfa-4368-963c-6ebc2f846ee1 | cirros |
+		+--------------------------------------+--------+
+
+		[root@localhost ~(keystone_demo)]# neutron net-list
+		+--------------------------------------+---------+--------------------------------------------------+
+		| id                                   | name    | subnets                                          |
+		+--------------------------------------+---------+--------------------------------------------------+
+		| 91c0f6ac-36f2-46fc-b075-6213a241fc2b | private | 3a4eebdc-6727-43e3-b5fe-8760d64c00fb 10.0.0.0/24 |
+		| 7ccf5c93-ca20-4962-b8bb-bff655e29788 | public  | 4e023f19-dfdd-4d00-94cc-dbea59b31698             |
+		+--------------------------------------+---------+--------------------------------------------------+
+
+		nova boot --flavor m1.tiny --image cirros --nic net-id=91c0f6ac-36f2-46fc-b075-6213a241fc2b demo-instance
+	
+		[root@localhost ~(keystone_demo)]# neutron floatingip-create public
+		Created a new floatingip:
+		+---------------------+--------------------------------------+
+		| Field               | Value                                |
+		+---------------------+--------------------------------------+
+		| fixed_ip_address    |                                      |
+		| floating_ip_address | 172.24.4.228                         |
+		| floating_network_id | 7ccf5c93-ca20-4962-b8bb-bff655e29788 |
+		| id                  | 2f0e7c1e-07dc-4c7e-b9a6-64f312e7f693 |
+		| port_id             |                                      |
+		| router_id           |                                      |
+		| status              | DOWN                                 |
+		| tenant_id           | 838ec33967ff4f659b808e4a593e7085     |
+		+---------------------+--------------------------------------+
+
+		nova add-floating-ip demo-instance 172.24.4.228
 
 After these above steps, we have succefully booted an instance with floating ip, 
 use `nova list` will output the instances
