@@ -12,27 +12,26 @@ function create_network()
 }
 
 function create_vif {
-    vm_uuid=$(xe vm-list name-label=CentOS_RDO minimal=true)
+    local vm_uuid=$(xe vm-list name-label=CentOS_RDO minimal=true)
 
-    vm_net_uuid=$(xe network-list name-label=openstack-vm-network minimal=true)
-    next_device=$(xe vm-param-get uuid=$vm_uuid param-name=allowed-VIF-devices | cut -d';' -f1)
-    vm_vif_uuid=$(xe vif-create device=$next_device network-uuid=$vm_net_uuid vm-uuid=$vm_uuid)
+    local vm_net_uuid=$(xe network-list name-label=openstack-vm-network minimal=true)
+    local next_device=$(xe vm-param-get uuid=$vm_uuid param-name=allowed-VIF-devices | cut -d';' -f1)
+    local vm_vif_uuid=$(xe vif-create device=$next_device network-uuid=$vm_net_uuid vm-uuid=$vm_uuid)
     xe vif-plug uuid=$vm_vif_uuid
 
-    ext_net_uuid=$(xe network-list name-label=openstack-ext-network minimal=true)
-    next_device=$(xe vm-param-get uuid=$vm_uuid param-name=allowed-VIF-devices | cut -d';' -f1)
-    ext_vif_uuid=$(xe vif-create device=$next_device network-uuid=$ext_net_uuid vm-uuid=$vm_uuid)
+    local ext_net_uuid=$(xe network-list name-label=openstack-ext-network minimal=true)
+    local next_device=$(xe vm-param-get uuid=$vm_uuid param-name=allowed-VIF-devices | cut -d';' -f1)
+    local ext_vif_uuid=$(xe vif-create device=$next_device network-uuid=$ext_net_uuid vm-uuid=$vm_uuid)
     xe vif-plug uuid=$ext_vif_uuid
 }
 
-# input param: vm_uuid
 function create_himn {
-    local vm_uuid=$1
+    local vm_uuid=$(xe vm-list name-label=CentOS_RDO minimal=true)
     local net=$(xe network-list bridge=xenapi --minimal)
     local vif=$(xe vif-create vm-uuid=$vm_uuid network-uuid=$net device=9)
+    xe vif-plug uuid=$vif
     local mac=$(xe vif-param-get uuid=$vif param-name=MAC)
     xe vm-param-set uuid=$vm_uuid xenstore-data:vm-data/himn_mac=$mac
-    xe vif-plug uuid=$vif
 }
 
 # run this function in domU
