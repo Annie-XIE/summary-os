@@ -11,20 +11,18 @@ function create_network()
     xe network-create name-label=$VM_NET
 }
 
-# input param: vm_uuid
 function create_vif {
-    local vm_uuid=$1
-    local allowed_vif_list=$(xe vm-param-get uuid=$vm_uuid param-name=allowed-VIF-devices | sed 's/;/ /g')
-    local vif_dev_int_net=$(echo $allowed_vif_list | awk '{print $1}')
-    local vif_dev_ext_net=$(echo $allowed_vif_list | awk '{print $2}')
+    vm_uuid=$(xe vm-list name-label=CentOS_RDO minimal=true)
 
-    local int_net_uuid=$(xe network-list name-label=$INT_NET --minimal)
-    local ext_net_uuid=$(xe network-list name-label=$EXT_NET --minimal)
+    vm_net_uuid=$(xe network-list name-label=openstack-vm-network minimal=true)
+    next_device=$(xe vm-param-get uuid=$vm_uuid param-name=allowed-VIF-devices | cut -d';' -f1)
+    vm_vif_uuid=$(xe vif-create device=$next_device network-uuid=$vm_net_uuid vm-uuid=$vm_uuid)
+    xe vif-plug uuid=$vm_vif_uuid
 
-    local vif_int_net=$(xe vif-create device=$vif_dev_int_net network-uuid=$int_net_uuid vm-uuid=$vm_uuid)
-    xe vif-plug uuid=$vif_int_net
-    local vif_ext_net=$(xe vif-create device=$vif_dev_ext_net network-uuid=$ext_net_uuid vm-uuid=$vm_uuid)
-    xe vif-plug uuid=$vif_ext_net
+    ext_net_uuid=$(xe network-list name-label=openstack-ext-network minimal=true)
+    next_device=$(xe vm-param-get uuid=$vm_uuid param-name=allowed-VIF-devices | cut -d';' -f1)
+    ext_vif_uuid=$(xe vif-create device=$next_device network-uuid=$ext_net_uuid vm-uuid=$vm_uuid)
+    xe vif-plug uuid=$ext_vif_uuid
 }
 
 # input param: vm_uuid
