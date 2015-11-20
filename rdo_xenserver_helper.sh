@@ -52,9 +52,8 @@ function active_himn_interface {
     ifup $dev
 }
 
-# input param: dom0_ip
 function install_dom0_plugins {
-    local dom0_ip=$1
+    local dom0_ip=169.254.0.1
 
     ################## nova #################
     mkdir -p /tmp/nova_plugins
