@@ -1,10 +1,13 @@
 http://xenserver.org/
 
-###XENSERVER DUNDEE BETA.2 
+###XENSERVER DUNDEE BETA.2 可用
 
-
-
-
+2015已接近尾声，2016正向我们招手，是时候向XenServer社区发节日礼物了。
+今天，我们已经发布了Dundee项木的beta 2版本。这个版本和九月份的beta 1版本有些拖延，
+这个延迟部分原因是我们花了不少精力来解决上报的各种问题。我们确信您会发现beta 2版本
+和Steve Willson在博客中对思杰在XenServer项目上的贡献将会是一个很好的礼物。
+作为礼物的一部分，我们计划做一系列博客来把一些主要改进点做深度介绍。
+对于那些更关注亮点的朋友，让我们现在就开始
 
 ###XENSERVER DUNDEE BETA.2 AVAILABLE
 
@@ -24,6 +27,9 @@ impacted our ability mix the newest CPUs with much older ones. The good news is 
 beta.2, that situation should be fully resolved, and may indeed offer some performance improvements. 
 Since this is an area where we really need to get things absolutely correct, we'd appreciate anyone 
 running Dundee to try this out if you can and report back on successes and issues.
+
+###CPU级别
+XenServer已经支持从不同代的CPU中创建资源池
 
 ###INCREASED SCALABILITY
 
