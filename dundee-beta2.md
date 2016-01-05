@@ -23,7 +23,7 @@ SUSE为其企业服务器版（SLES）和企业桌面版（SLED）发布了versi
 同样的补丁也应用到了Dundee并且已经包含在beta.2中。
 
 ###下载信息
-您可以在预览页 (http://xenserver.org/preview) 下载Dundee beta.2版本，任何发现的问题都可以在上报在我们的故障库中(https://bugs.xenserver.org)。
+您可以在预览页 (http://xenserver.org/preview) 下载Dundee beta.2版本，任何发现的问题都可以上报到我们的故障库(https://bugs.xenserver.org)。
 
 - 更多请参考: http://xenserver.org/blog.html?view=entry&id=104#sthash.MNzSY31f.dpuf
 
