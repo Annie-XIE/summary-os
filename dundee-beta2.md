@@ -18,7 +18,7 @@ From http://xenserver.org/blog.html?view=entry&id=104
 
 ###支持新的SUSE版本
 
-SUSE为其企业服务器版SLES（SUSE Linux Enterprise Server https://www.suse.com/products/server/）和企业桌面版SLED（SUSE Linux Enterprise Desktop https://www.suse.com/products/desktop/）发布了version 12 SP1，这两者在Dundee中都已得到支持。
+SUSE为其企业服务器版SLES（[SUSE Linux Enterprise Server](https://www.suse.com/products/server/)）和企业桌面版SLED（[SUSE Linux Enterprise Desktop](https://www.suse.com/products/desktop/)）发布了version 12 SP1，这两者在Dundee中都已得到支持。
 
 ###安全更新
 
