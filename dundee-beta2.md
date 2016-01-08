@@ -7,7 +7,7 @@ From http://xenserver.org/blog.html?view=entry&id=104
 
 今天，我们发布了下一代XenServer产品Dundee预览版2。我们花了大量精力解决已上报的各种问题，也导致该测试版本和九月份的预览版1相比有些延迟。我们确信该预览版2和Steve Wilson博客中对思杰在XenServer项目贡献的肯定是很好的新年礼物。作为礼物的一部分，我们计划发布一系列博客把主要改进点做深度介绍。对于那些更关注该预览版亮点的朋友，现在就让我为您做一一介绍。
 
-###异构处理器组建资源池
+###异构处理器集群
 多年来XenServer一直支持用不同代的CPU创建处理器资源池，但是几年前采用因特尔CPU发生一些改变，这影响了混合使用最新的CPU和相对较老的CPU的能力。好消息是，使用Dundee预览版2，这种状况得到了彻底解决，且确确实实提高了性能。这个领域需要我们把事情完完全全的做正确，我们非常感激任何人运行Dundee体验该特性并上报成功或者上报遇到的问题。
 
 ###增强的扩展性
@@ -26,4 +26,4 @@ SUSE为其企业服务器版SLES（[SUSE Linux Enterprise Server](https://www.su
 同样的补丁也应用到了Dundee并且已经包含在预览版2中。
 
 ###下载信息
-您可以在预览页 (http://xenserver.org/preview) 下载Dundee预览版2，任何发现的问题都欢迎上报到我们的故障库(https://bugs.xenserver.org)。
+您可以在[预览页](http://xenserver.org/preview) 下载Dundee预览版2，任何发现的问题都欢迎上报到我们的[故障库](https://bugs.xenserver.org)。
