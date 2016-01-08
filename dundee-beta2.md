@@ -4,6 +4,7 @@ From http://xenserver.org/blog.html?view=entry&id=104
 ###XENSERVER产品DUNDEE预览版2发布
 
 2015已接近尾声，2016正向我们招手，正是向XenServer社区发节日礼物的好时节。
+
 今天，我们发布了下一代XenServer产品Dundee预览版2。我们花了大量精力解决已上报的各种问题，也导致该测试版本和九月份的预览版1相比有些延迟。我们确信该预览版2和Steve Wilson博客中对思杰在XenServer项目贡献的肯定是很好的新年礼物。作为礼物的一部分，我们计划发布一系列博客把主要改进点做深度介绍。对于那些更关注该预览版亮点的朋友，现在就让我为您做一一介绍。
 
 ###异构处理器组建资源池
@@ -17,7 +18,7 @@ From http://xenserver.org/blog.html?view=entry&id=104
 
 ###支持新的SUSE版本
 
-SUSE为其企业服务器版SLES（https://www.suse.com/products/server/）和企业桌面版SLED（https://www.suse.com/products/desktop/）发布了version 12 SP1，这两者在Dundee中都已得到支持。
+SUSE为其企业服务器版SLES（SUSE Linux Enterprise Server https://www.suse.com/products/server/）和企业桌面版SLED（SUSE Linux Enterprise Desktop https://www.suse.com/products/desktop/）发布了version 12 SP1，这两者在Dundee中都已得到支持。
 
 ###安全更新
 
