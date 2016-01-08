@@ -26,4 +26,4 @@ SUSE为其企业服务器版SLES（[SUSE Linux Enterprise Server](https://www.su
 同样的补丁也应用到了Dundee并且已经包含在预览版2中。
 
 ###下载信息
-您可以在[预览页](http://xenserver.org/overview-xenserver-open-source-virtualization/prerelease.html)(http://xenserver.org/preview) 下载Dundee预览版2，任何发现的问题都欢迎上报到我们的[故障库](https://bugs.xenserver.org/secure/Dashboard.jspa)(https://bugs.xenserver.org)。
+您可以在[预览页](http://xenserver.org/overview-xenserver-open-source-virtualization/prerelease.html)（http://xenserver.org/preview） 下载Dundee预览版2，任何发现的问题都欢迎上报到我们的[故障库](https://bugs.xenserver.org/secure/Dashboard.jspa)（https://bugs.xenserver.org）。
