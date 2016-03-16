@@ -19,12 +19,12 @@ This script is used to build iso for XenServer Dom0 xapi plugin
 
 *NOTE: If no input parameters given, default values are used*
 
-xs-version: 6.5
+*xs-version: 6.5*
 
-xs-build: 90233c
+*xs-build: 90233c*
 
-os-git-branch: stable/liberty
+*os-git-branch: stable/liberty*
 
-os-plugin-version: 2015.1
+*os-plugin-version: 2015.1*
 
 
