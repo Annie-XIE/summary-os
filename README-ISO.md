@@ -17,7 +17,7 @@ This script is used to build iso for XenServer Dom0 xapi plugin
 
 
 
-##### NOTE: If no input parameters given, default values are used
+*NOTE: If no input parameters given, default values are used*
 
 xs-version: 6.5
 
