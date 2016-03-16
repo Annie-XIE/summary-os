@@ -7,17 +7,17 @@ This script is used to build iso for XenServer Dom0 xapi plugin
 
 #####./build-xenserver-suppack.sh $xs-version $xs-build $os-git-branch $os-plugin-version
 
-xs-version: XenServer version which can be used for this plugin
+* xs-version: XenServer version which can be used for this plugin
 
-xs-build: XenServer build number
+* xs-build: XenServer build number
 
-os-git-branch: OpenStack branch that's used for building this plugin
+* os-git-branch: OpenStack branch that's used for building this plugin
 
-os-plugin-version: OpenStack XenServer Dom0 plguin version
+* os-plugin-version: OpenStack XenServer Dom0 plguin version
 
 
 
-###### NOTE: If no input parameters given, default values are used
+##### NOTE: If no input parameters given, default values are used
 
 xs-version: 6.5
 
