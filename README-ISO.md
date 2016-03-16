@@ -1,6 +1,9 @@
 # build-xenserver-suppack.sh
 
-This script is used to build iso for XenServer Dom0 xapi plugin
+This script is used to build iso for XenServer Dom0 xapi plugin.
+
+It will build both Nova and Neutron Dom0 plugin RPM packages firstly, 
+and then make them in one ISO.
 
 
 ## usage:
