@@ -9,11 +9,16 @@ VLAN support. This is the first release including neutron project on XenServer.
 You can download from [fuel-plugin](https://www.mirantis.com/validated-solution-integrations/fuel-plugins/),
 in section *Citrix XenServer Fuel Plugin*, select *MOS 8.0*.
 
-In this blog, I will show you step by step.
+In this blog, I will focus on network part regarding neutron is recently supported
+together with XenServer. For basic Mirantis Fuel and XenServer introduction,
+you can refer our previous [blog post](https://github.com/citrix-openstack/blogentries/blob/master/Introduction_To_XenServer_Fuel_Plugin.md) 
 
-#### 1. Demo
+#### 1. What serivec it can provide for us?
 
-Before the detailed technial part, I will show you the final 
+Before go deep into technial part, I will show you the common functions that we can use
+with MOS8.0 under XenServer.
+
+
 
 ##### 1.1 OpenStack deployment
 
@@ -21,6 +26,9 @@ Before the detailed technial part, I will show you the final
 (https://github.com/Annie-XIE/summary-os/blob/master/deployment-neutron-1.png)
 
 ##### 1.2 Neutron virtal network topo
+![network node](https://github.com/Annie-XIE/summary-os/blob/master/pic/network-node.png)
+
+![compute node](https://github.com/Annie-XIE/summary-os/blob/master/pic/compute-node.png)
 
 
 
