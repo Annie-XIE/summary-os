@@ -19,8 +19,8 @@ Before the detailed technial part, I will show you the final
 
 ##### 1.2 Neutron virtal network topo
 
-![xenserver_architecture]
-(http://docs.openstack.org/liberty/config-reference/content/figures/2/a/a/common/figures/xenserver_architecture.png)
+![openstack_architecture]
+(https://github.com/Annie-XIE/summary-os/blob/master/deployment-neutron-1.png)
 
 #### 3. Architecture
 
