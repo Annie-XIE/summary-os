@@ -15,12 +15,14 @@ In this blog, I will show you step by step.
 
 Before the detailed technial part, I will show you the final 
 
-##### 1.1 Physical network topo
-
-##### 1.2 Neutron virtal network topo
+##### 1.1 OpenStack deployment
 
 ![openstack_architecture]
 (https://github.com/Annie-XIE/summary-os/blob/master/deployment-neutron-1.png)
+
+##### 1.2 Neutron virtal network topo
+
+
 
 #### 3. Architecture
 
