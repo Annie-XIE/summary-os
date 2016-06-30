@@ -1,8 +1,7 @@
 ### Mirantis 8.0 with XenServer 6.5/7.0 using Neutron VLAN
 
 Mirantis OpenStack is the most popular distribution in IaaS area and
-has 100+ enterprise customers. 
-
+has 100+ enterprise customers.
 XenServer as the leading open source virtualization platform, has released
 its offical [Fuel](https://wiki.openstack.org/wiki/Fuel) plugin based on Mirantis
 OpenStack 8.0, which provides neutron VLAN support. 
