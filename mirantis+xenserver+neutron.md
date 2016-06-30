@@ -23,21 +23,18 @@ Glance (Image), Cinder (Storage). It provides high level abstraction of network 
 such as Network, Subnet, Port, Router, etc. Also Neutron enforces SDN, delegating its implementation
 and functionalities to the plugin.
 
-See the picture of openstack components deployment
+See the picture of openstack deployment with Neutron
 
 ![openstack_architecture]
-(https://github.com/Annie-XIE/summary-os/blob/master/deployment-neutron-1.png)
+(http://docs.openstack.org/security-guide/_images/1aa-network-domains-diagram.png)
 
 #### 2. How neutron works under XenServer
 
-Back to XenServer, as we know XenServer is type-1 hypervisor with the concept of
-Dom0 (privileged domain) and DomU (unprivileged domain)
-Neutron provides several virtual network topologies compared with nova network, so let's
-start from a cross tenant VM connectivy.
+Back to networking, in Neutron's world, there are several concepts we need to clarify first.
 
 ##### 2.1 Logical networks
 
-There are several networks involved with Neutron OpenStack environment.
+Mirantis There are several networks involved with Neutron OpenStack environment.
 
     Public network
     Private network
@@ -46,7 +43,11 @@ There are several networks involved with Neutron OpenStack environment.
         Storage network
         PXE network
 
+Public network: 
+
 Internal network is a general term for all networks in your OpenStack environment except for Public and Private network. Internal networks include Storage, Management, and Admin (PXE) Fuel networks.
+
+
 
 ##### 2.2 Traffic flow
 
