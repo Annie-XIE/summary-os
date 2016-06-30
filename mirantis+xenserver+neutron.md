@@ -30,22 +30,22 @@ start from a cross tenant VM connectivy.
 
 ##### 2.1 Logical networks
 
-    Public network
+There are several networks involved with Neutron OpenStack environment.
 
+    Public network
     Private network
-  
     Internal network
+        Management network
+        Storage network
+        PXE network
 
 Internal network is a general term for all networks in your OpenStack environment except for Public and Private network. Internal networks include Storage, Management, and Admin (PXE) Fuel networks.
 
 ##### 2.2 Traffic flow
 
-    OVS rulse
-    
+    OVS rules
     East-West traffic
-    
     North-South traffic
-
 
 #### 3. XenServer fuel plugin
 
