@@ -17,9 +17,11 @@ you can refer to our previous blog post
 
 #### 1. Neutron brief
 
-what neutron provides for us
-the possiblility with SDN/NFV
-
+Basically Neutron is an OpenStack project to provide "networking as a service" (NaaS)
+with code-name Neutron. It's a standalone service alongside other services such as Nova (Compute), 
+Glance (Image), Cinder (Storage). It provides high level abstraction of network resources,
+such as Network, Subnet, Port, Router, etc. Also Neutron enforces SDN, delegating its implementation
+and functionalities to the plugin.
 
 #### 2. How neutron works under XenServer
 
