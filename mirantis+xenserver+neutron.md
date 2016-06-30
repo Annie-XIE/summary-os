@@ -23,10 +23,37 @@ Glance (Image), Cinder (Storage). It provides high level abstraction of network 
 such as Network, Subnet, Port, Router, etc. Also Neutron enforces SDN, delegating its implementation
 and functionalities to the plugin.
 
-See the picture of openstack deployment with Neutron
+The picture from OpenStack offical website describes typical deployment with Neutron
+
 
 ![openstack_architecture]
 (http://docs.openstack.org/security-guide/_images/1aa-network-domains-diagram.png)
+
+
+* Management network
+
+Used for internal communication between OpenStack Components. The IP addresses on this network
+should be reachable only within the data center and is considered the Management Security Domain.
+
+* Guest network
+
+Used for VM data communication within the cloud deployment. The IP addressing requirements of this
+network depend on the OpenStack Networking plug-in in use and the network configuration choices of
+the virtual networks made by the tenant. This network is considered the Guest Security Domain.
+
+* External network
+
+Used to provide VMs with Internet access in some deployment scenarios. The IP addresses on this
+network should be reachable by anyone on the Internet. This network is considered to be in the
+Public Security Domain.
+
+* API network
+
+Exposes all OpenStack APIs, including the OpenStack Networking API, to tenants. The IP addresses
+on this network should be reachable by anyone on the Internet. This may be the same network as the
+external network, as it is possible to create a subnet for the external network that uses IP
+allocation ranges to use only less than the full range of IP addresses in an IP block. This network
+is considered the Public Security Domain.
 
 #### 2. How neutron works under XenServer
 
