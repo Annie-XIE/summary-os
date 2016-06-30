@@ -38,9 +38,12 @@ Internal network is a general term for all networks in your OpenStack environmen
 
 ##### 2.2 Traffic flow
 
-East-West traffic
+    OVS rulse
+    
+    East-West traffic
+    
+    North-South traffic
 
-North-South traffic
 
 #### 3. XenServer fuel plugin
 
