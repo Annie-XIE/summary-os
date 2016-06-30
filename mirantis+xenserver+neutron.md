@@ -29,11 +29,19 @@ a quick look.
 Neutron provides several virtual network topologies compared with nova network, so let's
 start from a cross tenant VM connectivy.
 
-##### 2.1 networks
+##### 2.1 Plan networks
 
-br-mgmt
+Logical networks:
 
-br-storage
+    Public network
+
+    Private network
+  
+    Internal network
+
+Internal network is a general term for all networks in your OpenStack environment except for Public and Private network. Internal networks include Storage, Management, and Admin (PXE) Fuel networks. 
+
+
 
 
 ##### 2.2 Traffic flow
