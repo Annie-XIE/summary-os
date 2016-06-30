@@ -47,9 +47,11 @@ Internal network is a general term for all networks in your OpenStack environmen
     East-West traffic
     North-South traffic
 
+Draw traffic flow graphs to explain the traffic and OVS rules, iptables, ...
+
 #### 3. XenServer fuel plugin
 
 #### 4. Future
 
-Looking forward, we will enable more neutron features on XenServer, such as VxLAN, VPNaaS, 
+Looking forward, we will enrich more neutron features on XenServer, such as VxLAN, VPNaaS, 
 SDN, ....
