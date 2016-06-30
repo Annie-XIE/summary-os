@@ -13,34 +13,40 @@ In this blog, I will focus on network part since neutron is recently supported
 together with XenServer. For basic Mirantis and XenServer introduction,
 you can refer our previous [blog post](https://github.com/citrix-openstack/blogentries/blob/master/Introduction_To_XenServer_Fuel_Plugin.md) 
 
-#### 1. How the network is deployed?
+#### 1. Mirantis OpenStack
 
-Phyical 
-
-Network is a very complicated part in cloud computing area, so let's first
-go through some basic knowledge on neutron.
-
-Tenant network supported
-
-Neutorn security group supported
+As we know nova network is deprecated, Mirantis OpenStack 8.0 also dropped
+nova network support and changed to neutron network totally. So let's have
+a quick look.
 
 
-
-
-##### 1.1 OpenStack deployment
 
 ![openstack_architecture]
 (https://github.com/Annie-XIE/summary-os/blob/master/deployment-neutron-1.png)
 
-##### 1.2 Neutron virtal network topo
-![network node](https://github.com/Annie-XIE/summary-os/blob/master/pic/network-node.png)
+#### 2. How neutron works under XenServer
 
-![compute node](https://github.com/Annie-XIE/summary-os/blob/master/pic/compute-node.png)
+Neutron provides several virtual network topologies compared with nova network, so let's
+start from a cross tenant VM connectivy.
+
+##### 2.1 networks
+
+br-mgmt
+
+br-storage
+
+
+##### 2.2 Traffic flow
+
+East-West traffic
+
+North-South traffic
 
 
 
-#### 3. Architecture
+#### 3. XenServer fuel plugin
 
 #### 4. Future
 
-Looking forward, we will add more features based on neutron, such as VxLAN
+Looking forward, we will enable more neutron features on XenServer, such as VxLAN, VPNaaS, 
+SDN, ....
