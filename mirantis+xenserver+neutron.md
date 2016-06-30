@@ -23,8 +23,15 @@ Glance (Image), Cinder (Storage). It provides high level abstraction of network 
 such as Network, Subnet, Port, Router, etc. Also Neutron enforces SDN, delegating its implementation
 and functionalities to the plugin.
 
+See the picture of openstack components deployment
+
+![openstack_architecture]
+(https://github.com/Annie-XIE/summary-os/blob/master/deployment-neutron-1.png)
+
 #### 2. How neutron works under XenServer
 
+Back to XenServer, as we know XenServer is type-1 hypervisor with the concept of
+Dom0 (privileged domain) and DomU (unprivileged domain)
 Neutron provides several virtual network topologies compared with nova network, so let's
 start from a cross tenant VM connectivy.
 
