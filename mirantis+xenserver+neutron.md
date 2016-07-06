@@ -23,35 +23,16 @@ Glance (Image), Cinder (Storage). It provides high level abstraction of network 
 such as Network, Subnet, Port, Router, etc. Also Neutron enforces SDN, delegating its implementation
 and functionalities to the plugin.
 
-The picture from OpenStack offical website describes typical deployment with Neutron
+The picture from OpenStack offical website describes typical deployment with Neutron.
+
+    Controller node: Central part, 
+    Network node: Provide netwok sevice
+    Compute node: Provide computing service, scalale, depends on the size of your cloud environment
+
+Note: With Mirantis OpenStack, network node and controller node combined to controller node
 
 ![openstack_architecture]
 (http://docs.openstack.org/security-guide/_images/1aa-network-domains-diagram.png)
-
-* Management network
-
-Used for internal communication between OpenStack Components. The IP addresses on this network
-should be reachable only within the data center and is considered the Management Security Domain.
-
-* Guest network
-
-Used for VM data communication within the cloud deployment. The IP addressing requirements of this
-network depend on the OpenStack Networking plug-in in use and the network configuration choices of
-the virtual networks made by the tenant. This network is considered the Guest Security Domain.
-
-* External network
-
-Used to provide VMs with Internet access in some deployment scenarios. The IP addresses on this
-network should be reachable by anyone on the Internet. This network is considered to be in the
-Public Security Domain.
-
-* API network
-
-Exposes all OpenStack APIs, including the OpenStack Networking API, to tenants. The IP addresses
-on this network should be reachable by anyone on the Internet. This may be the same network as the
-external network, as it is possible to create a subnet for the external network that uses IP
-allocation ranges to use only less than the full range of IP addresses in an IP block. This network
-is considered the Public Security Domain.
 
 #### 2. How neutron works under XenServer
 
@@ -59,18 +40,32 @@ Back to networking, in Neutron's world, there are several concepts we need to cl
 
 ##### 2.1 Logical networks
 
-Mirantis There are several networks involved with Neutron OpenStack environment.
+With Mirantis OpenStack, there are several networks involved.
 
-    Public network
-    Private network
+    Public network (br-ex)
+    Private network (br-prv)
     Internal network
-        Management network
-        Storage network
-        PXE network
+        Management network (br-mgmt)
+        Storage network (br-storage)
+        PXE network (none)
 
-Public network: 
+These networks will be created automaitcally by Fuel during installation and they
+are all Linux bridges. 
 
-Internal network is a general term for all networks in your OpenStack environment except for Public and Private network. Internal networks include Storage, Management, and Admin (PXE) Fuel networks.
+* Public network (br-ex): 
+
+* Private network (br-int):
+  
+  This is tenant networ, in our case, it's VLAN. OpenStack tenant can define their own
+  L2 network. This allows IP belonging to different overlap.
+
+* Internal network:
+
+  As the word internal, this is only used in OpenStack, and traffic in these networks will not go out.
+  * PXE: Every node will boot from PXE network and it is only used for creating/booting new node
+  * Management network: This is for openstack internal management and communication
+  * Storage network: This is for cinder?
+ 
 
 ![mos_xs_net_topo](https://github.com/Annie-XIE/summary-os/blob/master/pic/MOS-XS-net-topo.png)
 
