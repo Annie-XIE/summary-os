@@ -15,6 +15,18 @@ our XenServer Fuel plugin. For basic Mirantis and XenServer introduction,
 you can refer to our previous blog post
 [Introduction to XenServer Fuel Plugin](https://github.com/citrix-openstack/blogentries/blob/master/Introduction_To_XenServer_Fuel_Plugin.md).
 
+#### Mirantis OpenStack brief
+
+Mirantis OpenStack contains Controller node, Compute node, Storage node, ...
+It make Network node combined with Controller node
+
+
+The picture from OpenStack offical website describes typical deployment with Neutron
+
+![openstack_architecture]
+(http://docs.openstack.org/security-guide/_images/1aa-network-domains-diagram.png)
+
+
 #### 1. Neutron brief
 
 Basically Neutron is an OpenStack project to provide "networking as a service" (NaaS)
@@ -23,12 +35,7 @@ Glance (Image), Cinder (Storage). It provides high level abstraction of network 
 such as Network, Subnet, Port, Router, etc. Also Neutron enforces SDN, delegating its implementation
 and functionalities to the plugin.
 
-The picture from OpenStack offical website describes typical deployment with Neutron
-
-
-![openstack_architecture]
-(http://docs.openstack.org/security-guide/_images/1aa-network-domains-diagram.png)
-
+![mos_xs_net_topo](https://github.com/Annie-XIE/summary-os/blob/master/pic/MOS-XS-net-topo.png)
 
 * Management network
 
@@ -82,7 +89,10 @@ Internal network is a general term for all networks in your OpenStack environmen
     East-West traffic
     North-South traffic
 
-Draw traffic flow graphs to explain the traffic and OVS rules, iptables, ...
+In this section, we will go through deep on how East-West/North-South traffic goes
+
+
+
 
 #### 3. XenServer fuel plugin
 
