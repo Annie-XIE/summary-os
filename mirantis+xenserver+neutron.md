@@ -167,6 +167,8 @@ Step-7. VM1's package finally went out through br-ex, see the physical route
         192.168.0.0     0.0.0.0         255.255.255.0   U     0      0        0 br-mgmt
         192.168.1.0     0.0.0.0         255.255.255.0   U     0      0        0 br-storage
 
+For package back from external network to VM, vice versa.
+
 * East-West traffic with instances having floating IP
 
 
