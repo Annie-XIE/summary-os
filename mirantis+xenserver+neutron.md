@@ -11,8 +11,8 @@ You can download our plugin from
 
 In this blog, I will focus on network part since neutron project is introduced in
 XenServer Fuel plugin for the first time. For basic Mirantis OpenStack, Mirantis Fuel
-and XenServer introduction, you can refer previous blog post
-[Introduction to XenServer Fuel Plugin](https://github.com/citrix-openstack/blogentries/blob/master/Introduction_To_XenServer_Fuel_Plugin.md).
+and XenServer introduction, you can refer previous
+[blog post](https://github.com/citrix-openstack/blogentries/blob/master/Introduction_To_XenServer_Fuel_Plugin.md).
 
 #### 1. Neutron brief
 
