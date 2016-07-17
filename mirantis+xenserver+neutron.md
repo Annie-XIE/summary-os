@@ -189,14 +189,13 @@ depending on where the VMs residing and whether the VMs belonging to the same te
 
 With the above graph, 
 
-(1) If VM1 and VM2 belong to the same tenant and private network, then traffic won't go out
-compute-node-1, just VM1 -> br-int -> VM2
+(1) VM1 and VM2 locate in the same host
 
-(2) If VM1 and VM2 belong to different tenant, no matter which physcial host the two VMs
-resides, traffic must go through network node
+If they connect to same network, traffic between them won't go out, just VM1 -> br-int(compute-node1) -> VM2
 
-(3) If VM1 and VM3 belong to the same tenant, as they locate in different host, traffic must
-go through network node
+If they connect to different network, traffic between them will go out, VM1 -> network-node -> VM2
+
+(3) VM1 and VM3 locate in different host, traffic between them must go through network node
 
 ### 3. Future
 
