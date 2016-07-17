@@ -4,30 +4,35 @@ Mirantis OpenStack is the most popular distribution in IaaS area and
 has 100+ enterprise customers.
 XenServer as the leading open source virtualization platform, has released
 its offical [Fuel](https://wiki.openstack.org/wiki/Fuel) plugin based on Mirantis
-OpenStack 8.0, which provides neutron VLAN support. 
+OpenStack 8.0, which integrates neturon and provides neutron VLAN support first time.
+You can download our plugin from 
+[mirantis fuel plugin](https://www.mirantis.com/validated-solution-integrations/fuel-plugins/) page.
 
-This plugins is the first release including neutron project on XenServer.
-You can download from [mirantis fuel plugin page](https://www.mirantis.com/validated-solution-integrations/fuel-plugins/),
-in section *Citrix XenServer Fuel Plugin*, select *MOS 8.0*.
 
-In this blog, I will focus on network part since neutron is introduced first time in
-our XenServer Fuel plugin. For basic Mirantis and XenServer introduction,
-you can refer to our previous blog post
+In this blog, I will focus on network part since neutron project is introduced in
+XenServer Fuel plugin for the first time. For basic Mirantis OpenStack, Mirantis Fuel
+and XenServer introduction, you can refer previous blog post
 [Introduction to XenServer Fuel Plugin](https://github.com/citrix-openstack/blogentries/blob/master/Introduction_To_XenServer_Fuel_Plugin.md).
 
 #### 1. Neutron brief
 
-Basically Neutron is an OpenStack project to provide "networking as a service" (NaaS)
-with code-name Neutron. It's a standalone service alongside other services such as Nova (Compute), 
-Glance (Image), Cinder (Storage). It provides high level abstraction of network resources,
-such as Network, Subnet, Port, Router, etc. Also Neutron enforces SDN, delegating its implementation
-and functionalities to the plugin.
+Basically Neutron is an OpenStack project which provides "networking as a service" (NaaS)
+with code-name Neutron. It's a standalone service alongside other services such as Nova (compute), 
+Glance (image), Cinder (storage). It provides high level abstraction of network resources,
+such as network, subnet, port, router, etc. And it enforces SDN, delegating its implementation
+and functionalities to the plugin, which is not possible in nova-network.
 
 The picture from OpenStack offical website describes typical deployment with Neutron.
 
-    Controller node: Central part, 
-    Network node: Provide netwok sevice
-    Compute node: Provide computing service, scalale, depends on the size of your cloud environment
+* Controller node: Provide management functions, such as API servers and scheduling
+services for Nova/Neutron/Glance/Cinder. It's the central part where most standard
+OpenStack services and tools run.
+* Network node: Provide network sevices, runs networking plug-in, layer 2 agent,
+and several layer 3 agents. Handles external (internet) connectivity for tenant virtual machines or instances.
+    * Layer 2 services include provisioning of virtual networks and tunnels. 
+    * Layer 3 services include routing, NAT, and DHCP. This node also 
+* Compute node: Provide computing service, it manages the hypervisors and virtual
+instances.
 
 Note: With Mirantis OpenStack, network node and controller node combined to controller node
 
