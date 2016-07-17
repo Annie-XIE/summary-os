@@ -175,8 +175,18 @@ For package back from external network to VM, vice versa.
 When talking about East-West traffic, the packages route will quite different
 depending on where the VMs residing and whether the VMs belonging to the same tenant.
 
-![east-west](https://github.com/Annie-XIE/summary-os/blob/master/pic/east-west-traffic-mark.png)
+![east-west](https://github.com/Annie-XIE/summary-os/blob/master/pic/East-West-traffic-mark.png)
 
+With the above graph, 
+
+(1) If VM1 and VM2 belong to the same tenant and private network, then traffic won't go out
+compute-node-1, just VM1 -> br-int -> VM2
+
+(2) If VM1 and VM2 belong to different tenant, no matter which physcial host the two VMs
+resides, traffic must go through network node
+
+(3) If VM1 and VM3 belong to the same tenant, as they locate in different host, traffic must
+go through network node
 
 
 
