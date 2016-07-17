@@ -83,21 +83,26 @@ to access OpenStack services.
 In this section, we will deeply go through how North-South/East-West traffic goes,
 and explain the OVS rules underly.
 
-    North-South traffic
-    East-West traffic
-    OVS rules
+    North-South traffic: Means traffic between instance and the external network (e.g. internet)
+    East-West traffic: Means traffic between instances
 
-* North-South traffic: Means traffic between instance and the external network (e.g. internet).
-* East-West traffic: Means traffic between instances.
-
-###### North-South traffice with instance having floating IP
+* North-South traffice with instance having floating IP
 
 In the above section, we have introduced different networks used in OpenStack cloud.
 
-![north-south]()
+![north-south](https://github.com/Annie-XIE/summary-os/blob/master/pic/north-south-traffic-mark.png)
+
+Let assume VM1(eth0 fixed IP: 192.168.30.4, floating IP: 10.71.17.81), VM1 ping www.google.com
+
+In compute node:
+1. VM1 eth1 sends packet out throu tap and qvb to br-int
+
+2. Port qvo recieve the package and trigger OVS rule:
+
+3.
 
 
-###### East-West traffic with instances having floating IP
+* East-West traffic with instances having floating IP
 
 
 
