@@ -1,4 +1,4 @@
-### Mirantis 8.0 with XenServer 6.5/7.0 using Neutron VLAN
+## Mirantis 8.0 with XenServer 6.5/7.0 using Neutron VLAN
 
 Mirantis OpenStack is the most popular distribution in IaaS area and
 has 100+ enterprise customers.
@@ -14,7 +14,7 @@ XenServer Fuel plugin for the first time. For basic Mirantis OpenStack, Mirantis
 and XenServer introduction, you can refer previous
 [blog post](https://github.com/citrix-openstack/blogentries/blob/master/Introduction_To_XenServer_Fuel_Plugin.md).
 
-#### 1. Neutron brief
+### 1. Neutron brief
 
 Basically Neutron is an OpenStack project which provides "networking as a service" (NaaS)
 with code-name Neutron. It's a standalone service alongside other services such as Nova (compute), 
@@ -39,11 +39,11 @@ Note: With Mirantis OpenStack, network node and controller node combined to cont
 ![openstack_architecture]
 (http://docs.openstack.org/security-guide/_images/1aa-network-domains-diagram.png)
 
-#### 2. How neutron works under XenServer
+### 2. How neutron works under XenServer
 
 Back to XenServer and Neutron, let's start by clarifying the concepts first.
 
-##### 2.1 Logical networks
+#### 2.1 Logical networks
 
 With Mirantis OpenStack, there are several networks involved.
 
@@ -78,7 +78,7 @@ to access OpenStack services.
 
 ![mos_xs_net_topo](https://github.com/Annie-XIE/summary-os/blob/master/pic/MOS-XS-net-topo.png)
 
-##### 2.3 Traffic flow
+#### 2.2 Traffic flow
 
 In this section, we will deeply go through how North-South/East-West traffic goes,
 and explain the OVS rules underly.
@@ -86,7 +86,7 @@ and explain the OVS rules underly.
     North-South traffic: Means traffic between instance and the external network (e.g. internet)
     East-West traffic: Means traffic between instances
 
-###### 2.3.1 North-South traffice with instance having floating IP
+##### 2.2.1 North-South traffice with instance having floating IP
 
 In the above section, we have introduced different networks used in OpenStack cloud.
 
@@ -169,15 +169,15 @@ Step-7. VM1's package finally went out through br-ex, see the physical route
 
 For package back from external network to VM, vice versa.
 
-###### 2.3.2 East-West traffic with instances having floating IP
+##### 2..2 East-West traffic with instances having floating IP
 
 
 
 
 
-#### 3. XenServer fuel plugin
+### 3. XenServer fuel plugin
 
-#### 4. Future
+### 4. Future
 
 Looking forward, we will enrich more neutron features on XenServer, such as VxLAN, VPNaaS, 
 SDN, ....
