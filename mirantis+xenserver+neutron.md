@@ -70,8 +70,6 @@ This is for traffics from/to tenant VMS. In our case, it's VLAN (802.1q).
 OpenStack tenant can define their own L2 private network allowing IP overlap.
 
 * Internal network:
-
-As the word internal, this is only used in OpenStack, and traffic in these networks will not go out.
     * PXE: Every node will boot from PXE network and it is only used for creating/booting new node
     * Management network: This is primarily targeted for openstack management, it's used
 to access OpenStack services.
