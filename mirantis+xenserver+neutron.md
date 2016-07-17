@@ -30,7 +30,7 @@ OpenStack services and tools run.
 * Network node: Provide network sevices, runs networking plug-in, layer 2 agent,
 and several layer 3 agents. Handles external (internet) connectivity for tenant virtual machines or instances.
     * Layer 2 services include provisioning of virtual networks and tunnels. 
-    * Layer 3 services include routing, NAT, and DHCP. This node also 
+    * Layer 3 services include routing, NAT, and DHCP.
 * Compute node: Provide computing service, it manages the hypervisors and virtual
 instances.
 
@@ -41,7 +41,7 @@ Note: With Mirantis OpenStack, network node and controller node combined to cont
 
 #### 2. How neutron works under XenServer
 
-Back to networking, in Neutron's world, there are several concepts we need to clarify first.
+Back to XenServer and Neutron, let's start by clarifying the concepts first.
 
 ##### 2.1 Logical networks
 
@@ -55,21 +55,28 @@ With Mirantis OpenStack, there are several networks involved.
         PXE network (none)
 
 These networks will be created automaitcally by Fuel during installation and they
-are all Linux bridges. 
+all use Linux bridge by default. 
 
 * Public network (br-ex): 
 
-* Private network (br-int):
-  
-  This is tenant networ, in our case, it's VLAN. OpenStack tenant can define their own
-  L2 network. This allows IP belonging to different overlap.
+This network should be represented as tagged or untagged isolated L2 network
+segment. Servers for external API access and providing VMs with connectivity
+to/from networking outside the cloud. Floating IPs are implemented with L3
+agent + NAT rules on Controller nodes
+
+* Private network (br-prv):
+
+This is for traffics from/to tenant VMS. In our case, it's VLAN (802.1q). 
+OpenStack tenant can define their own L2 private network allowing IP overlap.
 
 * Internal network:
 
-  As the word internal, this is only used in OpenStack, and traffic in these networks will not go out.
-  * PXE: Every node will boot from PXE network and it is only used for creating/booting new node
-  * Management network: This is for openstack internal management and communication
-  * Storage network: This is for cinder?
+As the word internal, this is only used in OpenStack, and traffic in these networks will not go out.
+    * PXE: Every node will boot from PXE network and it is only used for creating/booting new node
+    * Management network: This is primarily targeted for openstack management, it's used
+to access OpenStack services.
+    * Storage network: This is used to provide storage services such as replication traffic
+  from Ceph.
  
 
 ![mos_xs_net_topo](https://github.com/Annie-XIE/summary-os/blob/master/pic/MOS-XS-net-topo.png)
