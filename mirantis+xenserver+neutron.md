@@ -172,6 +172,10 @@ For package back from external network to VM, vice versa.
 
 ##### 2..2 East-West traffic with instances having floating IP
 
+When talking about East-West traffic, the packages route will quite different
+depending on where the VMs residing and whether the VMs belonging to the same tenant.
+
+![east-west](https://github.com/Annie-XIE/summary-os/blob/master/pic/east-west-traffic-mark.png)
 
 
 
