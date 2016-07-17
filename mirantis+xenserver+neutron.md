@@ -86,7 +86,7 @@ and explain the OVS rules underly.
     North-South traffic: Means traffic between instance and the external network (e.g. internet)
     East-West traffic: Means traffic between instances
 
-* North-South traffice with instance having floating IP
+###### 2.3.1 North-South traffice with instance having floating IP
 
 In the above section, we have introduced different networks used in OpenStack cloud.
 
@@ -169,7 +169,7 @@ Step-7. VM1's package finally went out through br-ex, see the physical route
 
 For package back from external network to VM, vice versa.
 
-* East-West traffic with instances having floating IP
+###### 2.3.2 East-West traffic with instances having floating IP
 
 
 
