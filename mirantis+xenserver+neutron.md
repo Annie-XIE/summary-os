@@ -52,7 +52,7 @@ With Mirantis OpenStack, there are several networks involved.
     Internal network
         Management network (br-mgmt)
         Storage network (br-storage)
-        PXE network (none)
+        PXE network (br-fw-admin)
 
 These networks will be created automaitcally by Fuel during installation and they
 all use Linux bridge by default. 
@@ -75,18 +75,22 @@ OpenStack tenant can define their own L2 private network allowing IP overlap.
 to access OpenStack services.
     * Storage network: This is used to provide storage services such as replication traffic
   from Ceph.
- 
 
 ![mos_xs_net_topo](https://github.com/Annie-XIE/summary-os/blob/master/pic/MOS-XS-net-topo.png)
 
+##### 2.3 Traffic flow
 
-##### 2.2 Traffic flow
+In this section, we will deeply go through how North-South/East-West traffic goes,
+and explain the OVS rules underly.
 
-    OVS rules
-    East-West traffic
     North-South traffic
+    East-West traffic
+    OVS rules
 
-In this section, we will go through deep on how East-West/North-South traffic goes
+* North-South traffic: Means traffic between VMs and the outside (e.g. internet)
+* East-West traffic: Means traffic between different VMs
+
+
 
 
 
