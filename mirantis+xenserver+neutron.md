@@ -137,7 +137,19 @@ br-int (DomU):
             Interface "qr-4742c3a4-a5"
                 type: internal
 
-Step-6. VM1' packages went out via gateway `qg` within namespace
+`ip netns exec qrouter-0f23c70d-5302-422a-8862-f34486b37b5d route`
+
+        Kernel IP routing table
+        Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+        default         10.71.16.1      0.0.0.0         UG    0      0        0 qg-1270ddd4-bb
+        10.10.0.0       *               255.255.255.0   U     0      0        0 qr-b747d7a6-ed
+        10.71.16.0      *               255.255.254.0   U     0      0        0 qg-1270ddd4-bb
+        192.168.30.0    *               255.255.255.0   U     0      0        0 qr-4742c3a4-a5
+
+Step-6. VM1' packages be SNAT and then went out via gateway `qg` within namespace
+
+       -A neutron-l3-agent-PREROUTING -d 10.71.17.81/32 -j DNAT --to-destination 192.168.30.4
+       -A neutron-l3-agent-float-snat -s 192.168.30.4/32 -j SNAT --to-source 10.71.17.81
 
 `ip netns exec qrouter-0f23c70d-5302-422a-8862-f34486b37b5d ifconfig`
 
@@ -157,15 +169,6 @@ Step-6. VM1' packages went out via gateway `qg` within namespace
           TX packets:127 errors:0 dropped:0 overruns:0 carrier:0
           collisions:0 txqueuelen:0 
           RX bytes:2016118 (2.0 MB)  TX bytes:8982 (8.9 KB)
-
-`ip netns exec qrouter-0f23c70d-5302-422a-8862-f34486b37b5d route`
-
-        Kernel IP routing table
-        Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-        default         10.71.16.1      0.0.0.0         UG    0      0        0 qg-1270ddd4-bb
-        10.10.0.0       *               255.255.255.0   U     0      0        0 qr-b747d7a6-ed
-        10.71.16.0      *               255.255.254.0   U     0      0        0 qg-1270ddd4-bb
-        192.168.30.0    *               255.255.255.0   U     0      0        0 qr-4742c3a4-a5
 
 Step-7. VM1's package finally went out through br-ex, see the physical route
 
