@@ -158,10 +158,17 @@ Step-6. VM1' packages went out via gateway `qg` within namespace
           collisions:0 txqueuelen:0 
           RX bytes:2016118 (2.0 MB)  TX bytes:8982 (8.9 KB)
 
-Step-7. VM1's package finally went out through br-ex, see the physical route
+`ip netns exec qrouter-0f23c70d-5302-422a-8862-f34486b37b5d route`
 
         Kernel IP routing table
         Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+        default         10.71.16.1      0.0.0.0         UG    0      0        0 qg-1270ddd4-bb
+        10.10.0.0       *               255.255.255.0   U     0      0        0 qr-b747d7a6-ed
+        10.71.16.0      *               255.255.254.0   U     0      0        0 qg-1270ddd4-bb
+        192.168.30.0    *               255.255.255.0   U     0      0        0 qr-4742c3a4-a5
+
+Step-7. VM1's package finally went out through br-ex, see the physical route
+
         0.0.0.0         10.71.16.1      0.0.0.0         UG    0      0        0 br-ex
         10.20.0.0       0.0.0.0         255.255.255.0   U     0      0        0 br-fw-admin
         10.71.16.0      0.0.0.0         255.255.254.0   U     0      0        0 br-ex
