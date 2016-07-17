@@ -95,12 +95,77 @@ In the above section, we have introduced different networks used in OpenStack cl
 Let assume VM1(eth0 fixed IP: 192.168.30.4, floating IP: 10.71.17.81), VM1 ping www.google.com
 
 In compute node:
-1. VM1 eth1 sends packet out throu tap and qvb to br-int
 
-2. Port qvo recieve the package and trigger OVS rule:
+Step-1. VM1(eth1) sent packet out through tap and qvb to br-int
 
-3.
+Step-2. VM1's packages arrived port qvo, internal tag 16 will be added to the packages
 
+br-int (In Dom0):
+
+        fail_mode: secure
+        Port br-int
+            Interface br-int
+                type: internal
+        Port "qvof5602d85-2e"
+            tag: 16
+            Interface "qvof5602d85-2e"
+
+Step-3. VM1's package arrived port patch-int triggering openflow rules, 
+internal tag 16 was changed to physical vlan tag 1173.
+
+        cookie=0x0, duration=12104.028s, table=0, n_packets=257, n_bytes=27404, idle_age=88, priority=4,in_port=7,dl_vlan=16 actions=mod_vlan_vid:1173,NORMAL
+
+In network node:
+
+Step-4. VM1's packages went through physical VLAN network to network node,
+in network node's integration bridge br-int, it triggered openflow rules,
+changing physical VLAN 1173 to internal tag again.
+
+        cookie=0xbe6ba01de8808bce, duration=12594.481s, table=0, n_packets=253, n_bytes=29517, idle_age=131, priority=3,in_port=1,dl_vlan=1173 actions=mod_vlan_vid:6,NORMAL
+
+Step-5. VM1's packages with internal tag 6 went through virtual router `qr` within qrouter namespace
+
+br-int (DomU):
+
+        Port "tapb977f7c3-e3"
+            tag: 6
+            Interface "tapb977f7c3-e3"
+                type: internal
+        Port "qr-4742c3a4-a5"
+            tag: 6
+            Interface "qr-4742c3a4-a5"
+                type: internal
+
+Step-6. VM1' packages went out via gateway `qg` within namespace
+
+`ip netns exec qrouter-0f23c70d-5302-422a-8862-f34486b37b5d ifconfig`
+
+    lo    Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:0 (0.0 B)  TX bytes:0 (0.0 B)
+    qg-1270ddd4-bb Link encap:Ethernet  HWaddr fa:16:3e:5b:36:8c  
+          inet addr:10.71.17.8  Bcast:10.71.17.255  Mask:255.255.254.0
+          inet6 addr: fe80::f816:3eff:fe5b:368c/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:30644 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:127 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:2016118 (2.0 MB)  TX bytes:8982 (8.9 KB)
+
+Step-7. VM1's package finally went out through br-ex, see the physical route
+
+        Kernel IP routing table
+        Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+        0.0.0.0         10.71.16.1      0.0.0.0         UG    0      0        0 br-ex
+        10.20.0.0       0.0.0.0         255.255.255.0   U     0      0        0 br-fw-admin
+        10.71.16.0      0.0.0.0         255.255.254.0   U     0      0        0 br-ex
+        192.168.0.0     0.0.0.0         255.255.255.0   U     0      0        0 br-mgmt
+        192.168.1.0     0.0.0.0         255.255.255.0   U     0      0        0 br-storage
 
 * East-West traffic with instances having floating IP
 
