@@ -87,7 +87,7 @@ and explain the OVS rules underly.
 
 * East-West traffic: traffic between instances
 
-##### 2.2.1 North-South traffice with instance having floating IP
+##### 2.2.1 North-South traffice with instance
 
 In the above section, we have introduced different networks used in OpenStack cloud.
 
@@ -170,7 +170,7 @@ Step-7. VM1's package finally went out through br-ex, see the physical route
 
 For package back from external network to VM, vice versa.
 
-##### 2..2 East-West traffic with instances having floating IP
+##### 2..2 East-West traffic with instances
 
 When talking about East-West traffic, the packages route will quite different
 depending on where the VMs residing and whether the VMs belonging to the same tenant.
@@ -188,11 +188,7 @@ resides, traffic must go through network node
 (3) If VM1 and VM3 belong to the same tenant, as they locate in different host, traffic must
 go through network node
 
+### 3. Future
 
-
-### 3. XenServer fuel plugin
-
-### 4. Future
-
-Looking forward, we will enrich more neutron features on XenServer, such as VxLAN, VPNaaS, 
-SDN, ....
+Looking forward, we will implement VxLAN and GRE network, also enrich more neutron features,
+such as VPNaaS, LBaaS, FWaaS, SDN ...
