@@ -3,7 +3,7 @@
 set +xu
 
 DOMZERO_USER=domzero
-dom0_ip=10.71.64.121
+dom0_ip=$1
 ssh_dom0="sudo -u $DOMZERO_USER ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$dom0_ip"
 
 #XS_HOST=`$ssh_dom0 "xe host-list --minimal"`
