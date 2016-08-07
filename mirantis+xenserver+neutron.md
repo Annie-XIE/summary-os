@@ -94,9 +94,9 @@ when VM1 ping www.google.com, how the traffic goes.
 
 * In compute node:
 
-Step-1. VM1(eth1) sent packet out through tap and qvb to br-int
+Step-1. VM1(eth1) sent packet out through port `tap` and `qvb` to bridge `br-int`
 
-Step-2. VM1's packages arrived port qvo, `internal tag 16` will be added to the packages
+Step-2. VM1's packages arrived port `qvo`, `internal tag 16` will be added to the packages
 
 
       Bridge br-int
@@ -108,16 +108,16 @@ Step-2. VM1's packages arrived port qvo, `internal tag 16` will be added to the 
             tag: 16
             Interface "qvof5602d85-2e"
 
-Step-3. VM1's package arrived port patch-int triggering openflow rules, 
+Step-3. VM1's package arrived port `int-br-prv` triggering openflow rules, 
 `internal tag 16` was changed to `physical VLAN 1173`.
 
         cookie=0x0, duration=12104.028s, table=0, n_packets=257, n_bytes=27404, idle_age=88, priority=4,in_port=7,dl_vlan=16 actions=mod_vlan_vid:1173,NORMAL
 
 * In network node:
 
-Step-4. VM1's packages went through physical VLAN network to network node,
-in network node's br-int OVS bridge, it triggered openflow rules,
-changing `physical VLAN 1173` to `internal tag 6`.
+Step-4. VM1's packages went through physical VLAN network to
+network node bridge `br-int` via port `int-br-prv` triggering
+openflow rules, changing `physical VLAN 1173` to `internal tag 6`.
 
         cookie=0xbe6ba01de8808bce, duration=12594.481s, table=0, n_packets=253, n_bytes=29517, idle_age=131, priority=3,in_port=1,dl_vlan=1173 actions=mod_vlan_vid:6,NORMAL
 
@@ -133,8 +133,6 @@ Step-5. VM1's packages with `internal tag 6` went into virtual router `qr`
             Interface "qr-4742c3a4-a5"
                 type: internal
 
-`qr` locates in linux network namespace, it's used for routing in tenant private network.
-
 `ip netns exec qrouter-0f23c70d-5302-422a-8862-f34486b37b5d route`
 
         Kernel IP routing table
@@ -144,7 +142,11 @@ Step-5. VM1's packages with `internal tag 6` went into virtual router `qr`
         10.71.16.0      *               255.255.254.0   U     0      0        0 qg-1270ddd4-bb
         192.168.30.0    *               255.255.255.0   U     0      0        0 qr-4742c3a4-a5
 
-Step-6. VM1' packages be SNAT and then went out via gateway `qg` within namespace
+`qr` locates in linux network namespace, it's used for routing within
+tenant private network. VM1's packeges were with fixed IP 192.168.30.4
+at the moment, from the above route table, we can see it's `qr-4742c3a4-a5`.
+
+Step-6. VM1' packages were SNAT and went out via gateway `qg` within namespace
 
        -A neutron-l3-agent-PREROUTING -d 10.71.17.81/32 -j DNAT --to-destination 192.168.30.4
        -A neutron-l3-agent-float-snat -s 192.168.30.4/32 -j SNAT --to-source 10.71.17.81
@@ -168,7 +170,7 @@ Step-6. VM1' packages be SNAT and then went out via gateway `qg` within namespac
           collisions:0 txqueuelen:0 
           RX bytes:2016118 (2.0 MB)  TX bytes:8982 (8.9 KB)
 
-Step-7. VM1's package finally went out through br-ex, see the physical route
+Step-7. VM1's packages finally went out through br-ex, see the physical route
 
         0.0.0.0         10.71.16.1      0.0.0.0         UG    0      0        0 br-ex
         10.20.0.0       0.0.0.0         255.255.255.0   U     0      0        0 br-fw-admin
