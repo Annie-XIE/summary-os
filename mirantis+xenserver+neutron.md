@@ -119,6 +119,16 @@ Step-4. VM1's packages went through physical VLAN network to
 network node bridge `br-int` via port `int-br-prv` triggering
 openflow rules, changing `physical VLAN 1173` to `internal tag 6`.
 
+      Bridge br-int        
+        Port int-br-prv
+            Interface int-br-prv
+                type: patch
+                options: {peer=phy-br-prv}
+
+openflow rules:
+
+      ovs-ofctl dump-flows br-int
+      NXST_FLOW reply (xid=0x4):
         cookie=0xbe6ba01de8808bce, duration=12594.481s, table=0, n_packets=253, n_bytes=29517, idle_age=131, priority=3,in_port=1,dl_vlan=1173 actions=mod_vlan_vid:6,NORMAL
 
 Step-5. VM1's packages with `internal tag 6` went into virtual router `qr`
