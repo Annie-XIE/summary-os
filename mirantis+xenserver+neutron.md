@@ -92,11 +92,11 @@ when VM1 ping www.google.com, how the traffic goes.
 
 ![north-south](https://github.com/Annie-XIE/summary-os/blob/master/pic/north-south-traffic-mark.png)
 
-In compute node:
+* In compute node:
 
 Step-1. VM1(eth1) sent packet out through tap and qvb to br-int
 
-Step-2. VM1's packages arrived port qvo, internal tag 16 will be added to the packages
+Step-2. VM1's packages arrived port qvo, `internal tag 16` will be added to the packages
 
 
       Bridge br-int
@@ -109,22 +109,21 @@ Step-2. VM1's packages arrived port qvo, internal tag 16 will be added to the pa
             Interface "qvof5602d85-2e"
 
 Step-3. VM1's package arrived port patch-int triggering openflow rules, 
-internal tag 16 was changed to physical vlan tag 1173.
+`internal tag 16` was changed to `physical VLAN 1173`.
 
         cookie=0x0, duration=12104.028s, table=0, n_packets=257, n_bytes=27404, idle_age=88, priority=4,in_port=7,dl_vlan=16 actions=mod_vlan_vid:1173,NORMAL
 
-In network node:
+* In network node:
 
 Step-4. VM1's packages went through physical VLAN network to network node,
-in network node's integration bridge br-int, it triggered openflow rules,
-changing physical VLAN 1173 to internal tag again.
+in network node's br-int OVS bridge, it triggered openflow rules,
+changing `physical VLAN 1173` to `internal tag 6`.
 
         cookie=0xbe6ba01de8808bce, duration=12594.481s, table=0, n_packets=253, n_bytes=29517, idle_age=131, priority=3,in_port=1,dl_vlan=1173 actions=mod_vlan_vid:6,NORMAL
 
-Step-5. VM1's packages with internal tag 6 went through virtual router `qr` within qrouter namespace
+Step-5. VM1's packages with `internal tag 6` went into virtual router `qr`
 
-br-int (DomU):
-
+      Bridge br-int
         Port "tapb977f7c3-e3"
             tag: 6
             Interface "tapb977f7c3-e3"
@@ -133,6 +132,8 @@ br-int (DomU):
             tag: 6
             Interface "qr-4742c3a4-a5"
                 type: internal
+
+`qr` locates in linux network namespace, it's used for routing in tenant private network.
 
 `ip netns exec qrouter-0f23c70d-5302-422a-8862-f34486b37b5d route`
 
