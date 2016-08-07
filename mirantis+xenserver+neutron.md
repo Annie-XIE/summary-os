@@ -199,14 +199,19 @@ depending on where the VMs residing and whether the VMs belonging to the same te
 
 * Scenario1: VM1 and VM2 locate in the same host, belong to the same tenant network and same subnet
 
-In this scenario, traffic only need 
+In this scenario, traffic from VM1 to VM2, only need the integration bridge in compute node.
+
+![east-west](https://github.com/Annie-XIE/summary-os/blob/master/pic/East-West-traffic-mark-1.png)
 
 * Scenario2: VM1 and VM3 locate in different hosts, belong to the same tenant network and same subnet
-* Scenario3: Others
 
-![east-west](https://github.com/Annie-XIE/summary-os/blob/master/pic/East-West-traffic-mark.png)
+In this scenario, traffic from VM1 to VM3 need the physical VLAN network, no network node functionality needed
 
-(3) VM1 and VM3 locate in different host, traffic between them must go through network node
+![east-west](https://github.com/Annie-XIE/summary-os/blob/master/pic/East-West-traffic-mark-2.png)
+
+* Scenario3: Others, e.g. VM1 and VM3 with different tenant network
+
+![east-west](https://github.com/Annie-XIE/summary-os/blob/master/pic/East-West-traffic-mark-3.png)
 
 ### 3. Future
 
