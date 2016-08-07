@@ -80,11 +80,11 @@ its IP address via Fuel's internal dhcp server.
 
 In this section, we will deeply go through on North-South/East-West traffic, explain the OVS rules underly.
 
-* North-South traffic: traffic between VMs and the external network (e.g. internet)
+* North-South network traffic: Traffic between VMs and the external network, e.g. Internet.
 
-* East-West traffic: traffic between VMs
+* East-West network traffic: Traffic between VMs.
 
-##### 2.2.1 North-South traffice
+##### 2.2.1 North-South network traffic
 
 In the above section, we have introduced different networks used in OpenStack cloud.
 Let's assume VM1 with fixed IP: 192.168.30.4, floating IP: 10.71.17.81,
@@ -94,10 +94,12 @@ when VM1 ping www.google.com, how the traffic goes.
 
 * In compute node:
 
-Step-1. VM1(eth1) sent packet out through port `tap` and `qvb` to bridge `br-int`
+Step-1. VM1(eth1) sent packet out through port `tap`
 
-Step-2. VM1's packages arrived port `qvo`, `internal tag 16` will be added to the packages
+Step-2. Seruity group rules on Linux bridge `qbr` handle firwalling and
+stack tracking for the packages
 
+Step-3. VM1's packages arrived port `qvo`, `internal tag 16` will be added to the packages
 
       Bridge br-int
         fail_mode: secure
@@ -108,14 +110,14 @@ Step-2. VM1's packages arrived port `qvo`, `internal tag 16` will be added to th
             tag: 16
             Interface "qvof5602d85-2e"
 
-Step-3. VM1's package arrived port `int-br-prv` triggering openflow rules, 
+Step-4. VM1's package arrived port `int-br-prv` triggering openflow rules, 
 `internal tag 16` was changed to `physical VLAN 1173`.
 
         cookie=0x0, duration=12104.028s, table=0, n_packets=257, n_bytes=27404, idle_age=88, priority=4,in_port=7,dl_vlan=16 actions=mod_vlan_vid:1173,NORMAL
 
 * In network node:
 
-Step-4. VM1's packages went through physical VLAN network to
+Step-5. VM1's packages went through physical VLAN network to
 network node bridge `br-int` via port `int-br-prv` triggering
 openflow rules, changing `physical VLAN 1173` to `internal tag 6`.
 
@@ -131,7 +133,7 @@ openflow rules:
       NXST_FLOW reply (xid=0x4):
         cookie=0xbe6ba01de8808bce, duration=12594.481s, table=0, n_packets=253, n_bytes=29517, idle_age=131, priority=3,in_port=1,dl_vlan=1173 actions=mod_vlan_vid:6,NORMAL
 
-Step-5. VM1's packages with `internal tag 6` went into virtual router `qr`
+Step-6. VM1's packages with `internal tag 6` went into virtual router `qr`
 
       Bridge br-int
         Port "tapb977f7c3-e3"
@@ -156,7 +158,7 @@ Step-5. VM1's packages with `internal tag 6` went into virtual router `qr`
 tenant private network. VM1's packeges were with fixed IP 192.168.30.4
 at the moment, from the above route table, we can see it's `qr-4742c3a4-a5`.
 
-Step-6. VM1' packages were SNAT and went out via gateway `qg` within namespace
+Step-7. VM1' packages were SNAT and went out via gateway `qg` within namespace
 
        -A neutron-l3-agent-PREROUTING -d 10.71.17.81/32 -j DNAT --to-destination 192.168.30.4
        -A neutron-l3-agent-float-snat -s 192.168.30.4/32 -j SNAT --to-source 10.71.17.81
@@ -180,7 +182,7 @@ Step-6. VM1' packages were SNAT and went out via gateway `qg` within namespace
           collisions:0 txqueuelen:0 
           RX bytes:2016118 (2.0 MB)  TX bytes:8982 (8.9 KB)
 
-Step-7. VM1's packages finally went out through br-ex, see the physical route
+Step-8. VM1's packages finally went out through br-ex, see the physical route
 
         0.0.0.0         10.71.16.1      0.0.0.0         UG    0      0        0 br-ex
         10.20.0.0       0.0.0.0         255.255.255.0   U     0      0        0 br-fw-admin
@@ -190,20 +192,19 @@ Step-7. VM1's packages finally went out through br-ex, see the physical route
 
 For package back from external network to VM, vice versa.
 
-##### 2..2 East-West traffic with instances
+##### 2..2 East-West network traffic
 
 When talking about East-West traffic, the packages route will quite different
 depending on where the VMs residing and whether the VMs belonging to the same tenant.
 
+* Scenario1: VM1 and VM2 locate in the same host, belong to the same tenant network and same subnet
+
+In this scenario, traffic only need 
+
+* Scenario2: VM1 and VM3 locate in different hosts, belong to the same tenant network and same subnet
+* Scenario3: Others
+
 ![east-west](https://github.com/Annie-XIE/summary-os/blob/master/pic/East-West-traffic-mark.png)
-
-With the above graph, 
-
-(1) VM1 and VM2 locate in the same host
-
-If they connect to same network, traffic between them won't go out, just VM1 -> br-int(compute-node1) -> VM2
-
-If they connect to different network, traffic between them will go out, VM1 -> network-node -> VM2
 
 (3) VM1 and VM3 locate in different host, traffic between them must go through network node
 
