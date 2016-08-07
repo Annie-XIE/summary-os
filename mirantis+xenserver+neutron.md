@@ -98,8 +98,8 @@ Step-1. VM1(eth1) sent packet out through tap and qvb to br-int
 
 Step-2. VM1's packages arrived port qvo, internal tag 16 will be added to the packages
 
-br-int (In Dom0):
 
+      Bridge br-int
         fail_mode: secure
         Port br-int
             Interface br-int
