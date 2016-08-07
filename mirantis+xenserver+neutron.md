@@ -19,20 +19,19 @@ and XenServer introduction, you can refer previous
 Basically Neutron is an OpenStack project which provides "networking as a service" (NaaS)
 with code-name Neutron. It's a standalone service alongside other services such as Nova (compute), 
 Glance (image), Cinder (storage). It provides high level abstraction of network resources,
-such as network, subnet, port, router, etc. And it enforces SDN, delegating its implementation
+such as network, subnet, port, router, etc. Further it enforces SDN, delegating its implementation
 and functionalities to the plugin, which is not possible in nova-network.
 
 The picture from OpenStack offical website describes typical deployment with Neutron.
 
 * Controller node: Provide management functions, such as API servers and scheduling
-services for Nova/Neutron/Glance/Cinder. It's the central part where most standard
+services for Nova, Neutron, Glance and Cinder. It's the central part where most standard
 OpenStack services and tools run.
 * Network node: Provide network sevices, runs networking plug-in, layer 2 agent,
-and several layer 3 agents. Handles external (internet) connectivity for tenant virtual machines or instances.
+and several layer 3 agents. Handles external connectivity for virtual machines.
     * Layer 2 services include provisioning of virtual networks and tunnels. 
     * Layer 3 services include routing, NAT, and DHCP.
-* Compute node: Provide computing service, it manages the hypervisors and virtual
-instances.
+* Compute node: Provide computing service, it manages the hypervisors and virtual machines.
 
 Note: With Mirantis OpenStack, network node and controller node combined to controller node
 
@@ -41,23 +40,20 @@ Note: With Mirantis OpenStack, network node and controller node combined to cont
 
 ### 2. How neutron works under XenServer
 
-Back to XenServer and Neutron, let's start by clarifying the concepts first.
+Back to XenServer and Neutron, let's start from those networks.
 
 #### 2.1 Logical networks
 
 With Mirantis OpenStack, there are several networks involved.
 
-    Public network (br-ex)
-    Private network (br-prv)
+    OpenStack Public network (br-ex)
+    OpenStack Private network
     Internal network
-        Management network (br-mgmt)
-        Storage network (br-storage)
-        PXE network (br-fw-admin)
+        OpenStack Management network (br-mgmt)
+        OpenStack Storage network (br-storage)
+        Fuel Admin(PXE) network (br-fw-admin)
 
-These networks will be created automaitcally by Fuel during installation and they
-all use Linux bridge by default. 
-
-* Public network (br-ex): 
+* OpenStack Public network (br-ex): 
 
 This network should be represented as tagged or untagged isolated L2 network
 segment. Servers for external API access and providing VMs with connectivity
@@ -66,15 +62,17 @@ agent + NAT rules on Controller nodes
 
 * Private network (br-prv):
 
-This is for traffics from/to tenant VMS. In our case, it's VLAN (802.1q). 
+This is for traffics from/to tenant VMS. Under XenServer, we use OpenvSwitch VLAN (802.1q). 
 OpenStack tenant can define their own L2 private network allowing IP overlap.
 
 * Internal network:
-    * PXE: Every node will boot from PXE network and it is only used for creating/booting new node
-    * Management network: This is primarily targeted for openstack management, it's used
-to access OpenStack services.
+    * OpenStack Management network: This is targeted for openstack management, it's used
+to access OpenStack services, can be tagged or untagged vlan network.
     * Storage network: This is used to provide storage services such as replication traffic
-  from Ceph.
+  from Ceph, can tagged or untagged vlan network.
+    * Fuel Admin(PXE) network: This is used fro creating and booting new nodes.
+All controller and compute nodes will boot from this PXE network and will get
+its IP address via Fuel's internal dhcp server.
 
 ![mos_xs_net_topo](https://github.com/Annie-XIE/summary-os/blob/master/pic/MOS-XS-net-topo.png)
 
