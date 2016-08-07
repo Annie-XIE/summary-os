@@ -47,7 +47,7 @@ Back to XenServer and Neutron, let's start from those networks.
 With Mirantis OpenStack, there are several networks involved.
 
     OpenStack Public network (br-ex)
-    OpenStack Private network
+    OpenStack Private network (br-prv)
     Internal network
         OpenStack Management network (br-mgmt)
         OpenStack Storage network (br-storage)
@@ -78,20 +78,19 @@ its IP address via Fuel's internal dhcp server.
 
 #### 2.2 Traffic flow
 
-In this section, we will deeply go through how North-South/East-West traffic goes,
-and explain the OVS rules underly.
+In this section, we will deeply go through on North-South/East-West traffic, explain the OVS rules underly.
 
-* North-South traffic: traffic between instance and the external network (e.g. internet)
+* North-South traffic: traffic between VMs and the external network (e.g. internet)
 
-* East-West traffic: traffic between instances
+* East-West traffic: traffic between VMs
 
-##### 2.2.1 North-South traffice with instance
+##### 2.2.1 North-South traffice
 
 In the above section, we have introduced different networks used in OpenStack cloud.
+Let's assume VM1 with fixed IP: 192.168.30.4, floating IP: 10.71.17.81,
+when VM1 ping www.google.com, how the traffic goes.
 
 ![north-south](https://github.com/Annie-XIE/summary-os/blob/master/pic/north-south-traffic-mark.png)
-
-Let assume VM1(eth0 fixed IP: 192.168.30.4, floating IP: 10.71.17.81), VM1 ping www.google.com
 
 In compute node:
 
