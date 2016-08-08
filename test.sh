@@ -19,7 +19,7 @@ if [ -z "$CONNTRACK_INSTALLED" ]; then
 fi
 
 # check whether conntrackd service is started
-CONNTRACK_STARTED=`$ssh_dom0 "service conntrackd status |grep 'not-found'"`
-if [ -e "$CONNTRACK_STARTED" ]; then
-    $ssh_dom0 "service conntrackd start"
+CONNTRACK_STARTED=`$ssh_dom0 "ps -ef|grep -c conntrackd"`
+if [ $CONNTRACK_STARTED -eq 1 ]; then
+    $ssh_dom0 "/usr/sbin/conntrackd -d -C /etc/conntrackd/conntrackd.conf"
 fi
