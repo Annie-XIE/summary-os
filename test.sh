@@ -15,16 +15,7 @@ if [ -z "$CONNTRACK_INSTALLED" ]; then
     REPO_VER=`$ssh_dom0 "yum version nogroups |grep Installed"`
     CENTOS_VER=$(echo $REPO_VER | awk -F " " '{print $2}' | awk -F ".el" '{print $1}' | awk -F "-" '{print $1 "." $2}')
     CENTOS_BASEREPO="/etc/yum.repos.d/CentOS-Base.repo"
-    BASEREPO_ENABLED=`$ssh_dom0 "grep enabled=1 $CENTOS_BASEREPO"`
-	
-    if [ -z "$BASEREPO_ENABLED" ]; then
-        $ssh_dom0 "sed -i s/mirrorlist=/#mirrorlist=/g $CENTOS_BASEREPO"
-        $ssh_dom0 "sed -i s/#baseurl=/baseurl=/g $CENTOS_BASEREPO"
-        $ssh_dom0 "sed -i s/enabled=0/enabled=1/g $CENTOS_BASEREPO"
-        $ssh_dom0 "sed -i s/\\\$releasever/$CENTOS_VER/g $CENTOS_BASEREPO"
-    fi
-	
-    $ssh_dom0 "yum install -y conntrack-tools"
+    $ssh_dom0 "yum install -y --enablerepo=base --releasever=$CENTOS_VER conntrack-tools"
 fi
 
 # check whether conntrackd service is started
