@@ -10,7 +10,7 @@ ssh_dom0="sudo -u $DOMZERO_USER ssh -o StrictHostKeyChecking=no -o UserKnownHost
 #XS_VER=`$ssh_dom0 "xe host-param-get uuid=$XS_HOST param-name=software-version param-key=product_version_text_short"`
 
 # check whether conntrack-tools package is installed
-CONNTRACK_INSTALLED=`$ssh_dom0 "yum list conntrack-tools | grep 'Installed Packages'"`
+CONNTRACK_INSTALLED=`$ssh_dom0 "yum list | grep 'conntrack-tools'"`
 if [ -z "$CONNTRACK_INSTALLED" ]; then
     REPO_VER=`$ssh_dom0 "yum version nogroups |grep Installed"`
     CENTOS_VER=$(echo $REPO_VER | awk -F " " '{print $2}' | awk -F ".el" '{print $1}' | awk -F "-" '{print $1 "." $2}')
