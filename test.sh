@@ -8,13 +8,13 @@ ssh_dom0="sudo -u $DOMZERO_USER ssh -o StrictHostKeyChecking=no -o UserKnownHost
 
 #XS_HOST=`$ssh_dom0 "xe host-list --minimal"`
 #XS_VER=`$ssh_dom0 "xe host-param-get uuid=$XS_HOST param-name=software-version param-key=product_version_text_short"`
+#CENTOS_BASEREPO="/etc/yum.repos.d/CentOS-Base.repo"
 
 # check whether conntrack-tools package is installed
-CONNTRACK_INSTALLED=`$ssh_dom0 "yum list | grep 'conntrack-tools'"`
+REPO_VER=`$ssh_dom0 "yum version nogroups |grep Installed"`
+CENTOS_VER=$(echo $REPO_VER | awk -F " " '{print $2}' | awk -F ".el" '{print $1}' | awk -F "-" '{print $1 "." $2}')
+CONNTRACK_INSTALLED=`$ssh_dom0 "yum list --enablerepo=base --releasever=$CENTOS_VER | grep 'conntrack-tools'"`
 if [ -z "$CONNTRACK_INSTALLED" ]; then
-    REPO_VER=`$ssh_dom0 "yum version nogroups |grep Installed"`
-    CENTOS_VER=$(echo $REPO_VER | awk -F " " '{print $2}' | awk -F ".el" '{print $1}' | awk -F "-" '{print $1 "." $2}')
-    CENTOS_BASEREPO="/etc/yum.repos.d/CentOS-Base.repo"
     $ssh_dom0 "yum install -y --enablerepo=base --releasever=$CENTOS_VER conntrack-tools"
 fi
 
